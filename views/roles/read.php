@@ -21,7 +21,7 @@
 
     <h2>Roles</h2>
     <?php if (checkPermission('crear')): ?>
-        <a type="submit" href="create.php" class="btn btn-primary mb-3">Crear Nuevo Usuario</a>
+        <a type="submit" href="create.php" class="btn btn-primary mb-3">Crear Nuevo Rol</a>
     <?php endif; ?>
     <a href="../../index.php" class="btn btn-secondary mb-3">Volver</a>
 

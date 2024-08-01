@@ -12,7 +12,7 @@ requireLogin();
 $userPermissions = getUserPermissions();
 
 // Verifica el permiso necesario para la página actual
-$requiredPermission = 'actualizar'; // 
+$requiredPermission = 'leer'; // 
 if (!checkPermission($requiredPermission)) {
     header("Location: " . BASE_URL . "/views/dashboard.php?error=permission_denied");
     exit();
@@ -65,7 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
     
     <?php if (checkPermission('crear')): ?>
-        <a href="create.php" class="btn btn-primary mb-3">Crear Nuevo Rol</a>
+        <a href="create.php" class="btn btn-primary mb-3">Crear</a>
     <?php endif; ?>
     <a href="read.php" class="btn btn-secondary">Cancelar</a>
 </form>

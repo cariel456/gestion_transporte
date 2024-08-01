@@ -44,13 +44,13 @@ $usuarios = getAllUsers();
                 <td><?php echo $usuario['habilitado'] ? 'Sí' : 'No'; ?></td>
                 <td><?php echo $usuario['rol_id'] ?></td>
                 <td>
-                            <?php if ($_SESSION['user_permissions']['actualizar']): ?>
-                            <a href="update.php?id=<?php echo $usuario['id']; ?>" class="btn btn-warning btn-sm">Actualizar</a>
-                            <?php endif; ?>
-                            <?php if ($_SESSION['user_permissions']['eliminar']): ?>
-                            <a href="delete.php?id=<?php echo $usuario['id']; ?>" class="btn btn-danger btn-sm">Eliminar</a>
-                            <?php endif; ?>
-                        </td>
+                    <?php if ($_SESSION['user_permissions']['actualizar']): ?>
+                    <a href="update.php?id=<?php echo $usuario['id']; ?>" class="btn btn-warning btn-sm">Actualizar</a>
+                    <?php endif; ?>
+                    <?php if ($_SESSION['user_permissions']['eliminar']): ?>
+                    <a href="delete.php?id=<?php echo $usuario['id']; ?>" class="btn btn-danger btn-sm">Eliminar</a>
+                    <?php endif; ?>
+                </td>
             </tr>
             <?php endforeach; ?>
         </tbody>
