@@ -7,9 +7,8 @@ requireLogin();
 
 $userPermissions = getUserPermissions();
 
-// Verifica el permiso necesario para la página actual
-$requiredPermission = 'eliminar';
-if (!checkPermission($requiredPermission)) {
+$requiredPermission = 'borrar';
+if (!checkPermission('personal', $requiredPermission)) {
     header("Location: " . BASE_URL . "/views/dashboard.php?error=permission_denied");
     exit();
 }

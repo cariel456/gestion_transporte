@@ -1,9 +1,9 @@
 <?php
 require_once '../config/db_config.php'; //CONEXION A LA DB
 
-$username = 'rocio';     //NOMBRE DEL USUARIO
-$password = 'rocio';     //CLAVE DEL USUARIO
-$rol_id = 2;            //PONER EL id DEL ROL(DE LA TABLA ROLES ELGIR QUE ROL DARLE AL USUARIO A CREAR, el 1 es ROOT POR EJ.)
+$username = 'taller';     //NOMBRE DEL USUARIO
+$password = 'taller';     //CLAVE DEL USUARIO
+$rol_id = 12;            //PONER EL id DEL ROL(DE LA TABLA ROLES ELGIR QUE ROL DARLE AL USUARIO A CREAR, el 1 es ROOT POR EJ.)
 
 $hashed_password = password_hash($password, PASSWORD_DEFAULT); //ENCRIPTACION DE LA CLAVE
 

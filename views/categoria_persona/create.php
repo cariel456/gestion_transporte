@@ -1,4 +1,5 @@
 <?php
+session_start();
 $projectRoot = dirname(__FILE__, 3);
 require_once dirname(__DIR__, 2) . '/config/config.php';
 require_once $projectRoot . '/includes/functions.php';
@@ -6,10 +7,13 @@ require_once ROOT_PATH . '/includes/auth.php';
 
 requireLogin();
 
-// Para create.php
-checkPermission('crear');
+$userPermissions = getUserPermissions();
 
-include ROOT_PATH . '/includes/header.php';
+$requiredPermission = 'leer';
+if (!checkPermission('personal', $requiredPermission)) {
+    header("Location: " . BASE_URL . "/views/dashboard.php?error=permission_denied");
+    exit();
+}
 
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -23,6 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = "Error al crear la categoría de persona";
     }
 }
+include ROOT_PATH . '/includes/header.php';
 ?>
 
 <!DOCTYPE html>

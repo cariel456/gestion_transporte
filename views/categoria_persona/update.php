@@ -1,9 +1,19 @@
 <?php
+session_start();
 $projectRoot = dirname(__FILE__, 3);
 require_once dirname(__DIR__, 2) . '/config/config.php';
+require_once ROOT_PATH . '/includes/auth.php';
 require_once $projectRoot . '/includes/functions.php';
-include ROOT_PATH . '/includes/header.php';
 
+requireLogin();
+
+$userPermissions = getUserPermissions();
+
+//$requiredPermission = 'leer';
+//if (!checkPermission('personal', $requiredPermission)) {
+//    header("Location: " . BASE_URL . "/views/dashboard.php?error=permission_denied");
+//    exit();
+//}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id = $_POST['id'];
@@ -17,7 +27,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = "Error al actualizar la categoría de persona";
     }
 }
-
 $id = $_GET['id'] ?? null;
 if (!$id) {
     header("Location: read.php");
@@ -29,6 +38,7 @@ if (!$categoria) {
     header("Location: read.php");
     exit();
 }
+include ROOT_PATH . '/includes/header.php';
 ?>
 
 <!DOCTYPE html>

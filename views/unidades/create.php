@@ -1,8 +1,8 @@
 <?php
+session_start();
 $projectRoot = dirname(__FILE__, 3);
 require_once dirname(__DIR__, 2) . '/config/config.php';
 require_once $projectRoot . '/includes/functions.php';
-include ROOT_PATH . '/includes/header.php';
 
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -17,6 +17,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = "Error al crear la unidad";
     }
 }
+include ROOT_PATH . '/includes/header.php';
+
 ?>
 
 <!DOCTYPE html>
@@ -40,11 +42,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
             <div class="mb-3">
                 <label for="descripcion" class="form-label">Descripción</label>
-                <input type="text" class="form-control" id="descripcion" name="descripcion" required>
+                <input type="text" class="form-control" id="descripcion" name="descripcion" >
             </div>
             <div class="mb-3">
                 <label for="numero_unidad" class="form-label">Número de Unidad</label>
-                <input type="number" class="form-control" id="numero_unidad" name="numero_unidad" required>
+                <input type="number" class="form-control" id="numero_unidad" name="numero_unidad" >
             </div>
             <button type="submit" class="btn btn-primary">Crear</button>
             <a href="read.php" class="btn btn-secondary">Cancelar</a>

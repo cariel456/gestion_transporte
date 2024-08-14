@@ -15,6 +15,14 @@ if (deleteCategoriaPersona($id)) {
 } else {
     echo "Error al eliminar la categoría de persona";
 }
-
+$persona=getAllCategoriasPersona();
 ?>
 
+<div class="container mt-5">
+    <h2>Eliminar Personal</h2>
+    <p>¿Está seguro de que desea eliminar la categoria: <?php echo $persona['nombre_categoria']; ?>?</p>
+    <form method="POST">
+        <button type="submit" class="btn btn-danger">Eliminar</button>
+        <a href="read.php" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>

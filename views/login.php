@@ -1,6 +1,8 @@
 <?php
+session_start();
 require_once '../config/config.php';
-require_once '../includes/functions.php';
+require_once ROOT_PATH . '/includes/auth.php';
+require_once ROOT_PATH . '/includes/functions.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = $_POST['username'];
@@ -9,22 +11,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $user = getUserByUsername($username);
 
     if ($user && password_verify($password, $user['password'])) {
-        session_start();
         $_SESSION['user_id'] = $user['id'];
         $_SESSION['username'] = $user['nombre_usuario'];
-        $_SESSION['user_permissions'] = [
-            'leer' => $user['leer'],
-            'crear' => $user['crear'],
-            'actualizar' => $user['actualizar'],
-            'eliminar' => $user['eliminar']
-        ];
-        header("Location: " . BASE_URL . "/views/dashboard.php");
-        exit();
+        $userPermissions = getUserPermissions($user['id']);
+        if (!empty($userPermissions)) {
+            $_SESSION['user_permissions'] = $userPermissions;
+            header("Location: " . BASE_URL . "/views/dashboard.php");
+            exit();
+        } else {
+            $error = "No se encontraron permisos para este usuario";
+        }
     } else {
         $error = "Usuario o contraseña incorrectos";
     }
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="es">

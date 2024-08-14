@@ -2,7 +2,6 @@
 require_once '../../config/config.php';
 require_once ROOT_PATH . '/includes/auth.php';
 require_once ROOT_PATH . '/includes/functions.php';
-include ROOT_PATH . '/includes/header.php';
 
 requireLogin();
 
@@ -71,6 +70,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     ];
     $results = searchHorariosInterurbanos($filters);
 }
+include ROOT_PATH . '/includes/header.php';
 ?>
 
 <div class="container mt-5">
@@ -117,6 +117,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
         </div>
         <button type="submit" class="btn btn-primary">Buscar</button>
+        <a href="../../index.php" class="btn btn-secondary mb-3">Volver</a>
     </form>
 
     <?php if (!empty($results)): ?>

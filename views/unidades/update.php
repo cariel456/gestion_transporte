@@ -1,8 +1,8 @@
 <?php
+session_start();
 $projectRoot = dirname(__FILE__, 3);
 require_once dirname(__DIR__, 2) . '/config/config.php';
 require_once $projectRoot . '/includes/functions.php';
-include ROOT_PATH . '/includes/header.php';
 
 
 $id = $_GET['id'] ?? null;
@@ -20,16 +20,16 @@ if (!$unidad) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $codigo_interno = $_POST['codigo_interno'];
     $descripcion = $_POST['descripcion'];
-    $habilitado = isset($_POST['habilitado']) ? 1 : 0;
     $numero_unidad = $_POST['numero_unidad'];
     
-    if (updateUnidad($id, $codigo_interno, $descripcion, $habilitado, $numero_unidad)) {
+    if (updateUnidad($id, $codigo_interno, $descripcion, $numero_unidad)) {
         header("Location: read.php");
         exit();
     } else {
         $error = "Error al actualizar la unidad";
     }
 }
+include ROOT_PATH . '/includes/header.php';
 ?>
 
 <!DOCTYPE html>
@@ -54,10 +54,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="mb-3">
                 <label for="descripcion" class="form-label">Descripción</label>
                 <input type="text" class="form-control" id="descripcion" name="descripcion" value="<?php echo $unidad['descripcion']; ?>" required>
-            </div>
-            <div class="mb-3 form-check">
-                <input type="checkbox" class="form-check-input" id="habilitado" name="habilitado" <?php echo $unidad['habilitado'] ? 'checked' : ''; ?>>
-                <label class="form-check-label" for="habilitado">Habilitado</label>
             </div>
             <div class="mb-3">
                 <label for="numero_unidad" class="form-label">Número de Unidad</label>

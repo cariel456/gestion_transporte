@@ -1,20 +1,22 @@
 <?php
+session_start();
     $projectRoot = dirname(__FILE__, 3);
     require_once dirname(__DIR__, 2) . '/config/config.php';
     require_once ROOT_PATH . '/includes/auth.php';
     require_once $projectRoot . '/includes/functions.php';
-    include ROOT_PATH . '/includes/header.php';
 
     $categorias = getAllCategoriasPersona();
     requireLogin();
-    $userPermissions = getUserPermissions();
 
-    // Verifica el permiso necesario para la página actual
-    $requiredPermission = 'leer'; // 
-    if (!checkPermission($requiredPermission)) {
-        header("Location: " . BASE_URL . "/views/dashboard.php?error=permission_denied");
-        exit();
-    }
+    $userPermissions = getUserPermissions();
+    
+    //$requiredPermission = 'leer';
+    //if (!checkPermission('personal', $requiredPermission)) {
+    //    header("Location: " . BASE_URL . "/views/dashboard.php?error=permission_denied");
+    //    exit();
+    //}
+    include ROOT_PATH . '/includes/header.php';
+
 ?>
 
 <!DOCTYPE html>
@@ -29,9 +31,9 @@
     <div class="container mt-5">
 
     <h1>Ingresar nueva categoria</h1>
-        <?php if ($_SESSION['user_permissions']['crear']): ?>
+        <?php //if ($_SESSION['user_permissions']['crear']): ?>
         <a href="create.php" class="btn btn-success mb-3">Crear</a>
-        <?php endif; ?>
+        <?php //endif; ?>
         <a href="../../index.php" class="btn btn-secondary mb-3">Volver</a>
 
         <table class="table table-striped">
@@ -52,12 +54,12 @@
                         <td><?php echo $categoria['descripcion_categoria']; ?></td>
                         <td><?php echo $categoria['habilitado'] ? 'Sí' : 'No'; ?></td>
                         <td>
-                            <?php if ($_SESSION['user_permissions']['actualizar']): ?>
+                            <?php //if ($_SESSION['user_permissions']['actualizar']): ?>
                             <a href="update.php?id=<?php echo $categoria['id']; ?>" class="btn btn-warning btn-sm">Actualizar</a>
-                            <?php endif; ?>
-                            <?php if ($_SESSION['user_permissions']['eliminar']): ?>
+                            <?php //endif; ?>
+                            <?php //if ($_SESSION['user_permissions']['eliminar']): ?>
                             <a href="delete.php?id=<?php echo $categoria['id']; ?>" class="btn btn-danger btn-sm">Eliminar</a>
-                            <?php endif; ?>
+                            <?php //endif; ?>
                         </td>
                     </tr>
                 <?php endforeach; ?>

@@ -2,7 +2,6 @@
     require_once '../../config/config.php';
     require_once ROOT_PATH . '/includes/auth.php';
     require_once ROOT_PATH . '/includes/functions.php';
-    include ROOT_PATH . '/includes/header.php'; 
 
     $roles = getAllRoles();
     requireLogin();
@@ -15,6 +14,8 @@
         header("Location: " . BASE_URL . "/views/dashboard.php?error=permission_denied");
         exit();
     }
+    
+    include ROOT_PATH . '/includes/header.php'; 
 ?>
 
 <div class="container mt-5">

@@ -1,8 +1,19 @@
 <?php
+session_start();
 require_once '../../config/config.php';
 require_once ROOT_PATH . '/includes/auth.php';
 require_once ROOT_PATH . '/includes/functions.php';
-include ROOT_PATH . '/includes/header.php';
+
+requireLogin();
+
+//$userPermissions = getUserPermissions();
+
+$requiredPermission = 'leer';
+//if (!checkPermission('personal', $requiredPermission)) {
+//    header("Location: " . BASE_URL . "/views/dashboard.php?error=permission_denied");
+//    exit();
+//}
+
 
 $terminales = getAllTerminales();
 $lineas = getAllLineas(); // Agregamos esta línea
@@ -30,6 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = "Error al crear los horarios interurbanos";
     }
 }
+include ROOT_PATH . '/includes/header.php';
 ?>
 
 <div class="container mt-5">

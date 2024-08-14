@@ -1,16 +1,24 @@
 <?php
+session_start();
 require_once dirname(__DIR__, 2) . '/config/config.php';
 require_once ROOT_PATH . '/includes/auth.php';
 require_once ROOT_PATH . '/includes/functions.php';
 
 requireLogin();
 
-// Para read.php
-checkPermission('leer');
+$userPermissions = getUserPermissions();
 
-include ROOT_PATH . '/includes/header.php';
+if (!checkPermission('taller', 'leer')) {
+    //header("Location: " . BASE_URL . "/views/dashboard.php?error=permission_denied");
+    //exit();
+}
 
 $solicitudes = getAllSolicitudesPedidosReparaciones();
+$niveles_urgencias = getAllNivelesUrgencias();
+$grupos_funciones = getAllGruposFunciones();
+$especialidades = getAllEspecialidadesTalleres();
+
+include ROOT_PATH . '/includes/header.php';
 
 ?>
 
@@ -25,27 +33,30 @@ $solicitudes = getAllSolicitudesPedidosReparaciones();
 <body>
     <div class="container mt-5">
         <h1>Solicitudes de pedidos de reparaciones</h1>
-        <?php if ($_SESSION['user_permissions']['crear']): ?>
-        <a href="create.php" class="btn btn-success mb-3">Crear Solicitud</a>
-        <?php endif; ?>
-        <a href="../../index.php" class="btn btn-secondary mb-3">Volver</a>
-        <table class="table table-striped">
+
+        <?php //if (isset($_SESSION['user_permissions']['crear']) && $_SESSION['user_permissions']['crear']): ?>
+            <a href="create.php" class="btn btn-success mb-3">Crear Solicitud</a>
+        <?php //endif; ?>
+
+        <a href="../dashboard.php" class="btn btn-secondary mb-3">Volver</a>
+    <table class="table table-striped">
         <thead>
-    <tr>
-        <th>N°Solicitud</th>
-        <th>Solicitante</th>
-        <th>Fecha Solicitud</th>
-        <th>Conductor</th>
-        <th>Especialidad</th>
-        <th>Ubicación</th>
-        <th>Grupo Función</th>
-        <th>Nivel Urgencia</th>
-        <th>Mantenimiento</th>
-        <th>Unidad</th>
-        <th>Pedido Detalle</th>
-        <th>Acciones</th>
-    </tr>
-</thead>
+            <tr>
+                <th>N°Solicitud</th>
+                <th>Solicitante</th>
+                <th>Fecha Solicitud</th>
+                <th>Conductor</th>
+                <th>Especialidad</th>
+                <th>Ubicación</th>
+                <th>Grupo Función</th>
+                <th>Nivel Urgencia</th>
+                <th>Mantenimiento</th>
+                <th>Unidad</th>
+                <th>Pedido Detalle</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
 <tbody>
     <?php foreach ($solicitudes as $solicitud) : ?>
         <tr>
@@ -53,19 +64,31 @@ $solicitudes = getAllSolicitudesPedidosReparaciones();
             <td><?php echo $solicitud['solicitante']; ?></td>
             <td><?php echo $solicitud['fecha_solicitud']; ?></td>
             <td><?php echo $solicitud['conductor']; ?></td>
-            <td><?php echo $solicitud['especialidades']; ?></td>
+            <td>
+            <?php 
+                $especialidades = getEspecialidadesBySolicitudId($solicitud['id']);
+                echo implode(', ', $especialidades);
+                ?>
+            </td>
             <td><?php echo $solicitud['ubicacion']; ?></td>
-            <td><?php echo $solicitud['grupo_funcion']; ?></td>
-            <td><?php echo $solicitud['nivel_urgencia']; ?></td>
+            <td><?php echo getGrupoFuncionNombre($solicitud['grupo_funcion']); ?></td>
+            <td><?php echo getNivelUrgenciaNombre($solicitud['nivel_urgencia']); ?></td>
             <td><?php echo $solicitud['mantenimiento']; ?></td>
             <td><?php echo $solicitud['numero_unidad']; ?></td>
             <td><?php echo $solicitud['observaciones']; ?></td>
             <td>
-                    <?php if ($_SESSION['user_permissions']['actualizar']): ?>
-                    <a href="update.php?id=<?php echo $solicitud['id']; ?>" class="btn btn-warning btn-sm">Actualizar</a>
+                <?php 
+                $estado_actual = getEstadoActual($solicitud['id']);
+                echo $estado_actual['nombre_estado'];
+                ?>
+                <a href="actualizar_estado.php?id=<?php echo $solicitud['id']; ?>" class="btn btn-info btn-sm">Actualizar Estado</a>
+            </td>
+            <td>
+                    <?php if (isset($_SESSION['user_permissions']['actualizar']) && $_SESSION['user_permissions']['actualizar']): ?>
+                        <a href="update.php?id=<?php echo $solicitud['id']; ?>" class="btn btn-warning btn-sm">Actualizar</a>
                     <?php endif; ?>
-                    <?php if ($_SESSION['user_permissions']['eliminar']): ?>
-                    <a href="delete.php?id=<?php echo $solicitud['id']; ?>" class="btn btn-danger btn-sm">Eliminar</a>
+                    <?php if (isset($_SESSION['user_permissions']['eliminar']) && $_SESSION['user_permissions']['eliminar']): ?>
+                        <a href="delete.php?id=<?php echo $solicitud['id']; ?>" class="btn btn-danger btn-sm">Eliminar</a>
                     <?php endif; ?>
             </td>
         </tr>

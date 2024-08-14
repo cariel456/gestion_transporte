@@ -1,24 +1,18 @@
-
 <?php
+session_start();
 require_once dirname(__DIR__, 2) . '/config/config.php';
 require_once ROOT_PATH . '/includes/auth.php';
 require_once ROOT_PATH . '/includes/functions.php';
 
 requireLogin();
 
-// Para read.php
-checkPermission('leer');
+$userPermissions = getUserPermissions();
 
-// Para create.php
-checkPermission('crear');
-
-// Para update.php
-checkPermission('actualizar');
-
-// Para delete.php
-checkPermission('eliminar');
-
-include ROOT_PATH . '/includes/header.php'; 
+$requiredPermission = 'leer';
+if (!checkPermission('personal', $requiredPermission)) {
+//    header("Location: " . BASE_URL . "/views/dashboard.php?error=permission_denied");
+//    exit();
+}
 
 $id = $_GET['id'] ?? null;
 if (!$id) {
@@ -32,6 +26,9 @@ if (deleteSolicitudPedidoReparacion($id)) {
 } else {
     echo "Error al eliminar la solicitud de pedido de reparación";
 } 
+
+include ROOT_PATH . '/includes/header.php'; 
+
 ?>
 
     <div class="container mt-5">
@@ -42,5 +39,3 @@ if (deleteSolicitudPedidoReparacion($id)) {
             <a href="read.php" class="btn btn-secondary">Cancelar</a>
         </form>
     </div>
-
-    <?include ROOT_PATH . '/includes/footer.php'; ?>

@@ -1,4 +1,5 @@
 <?php
+session_start();
 $projectRoot = dirname(__FILE__, 3);
 require_once $projectRoot . '/includes/functions.php';
 
@@ -14,4 +15,17 @@ if (deleteUnidad($id)) {
 } else {
     echo "Error al eliminar la unidad";
 }
+
+$persona = getAllUnidades($id);
+
 ?>
+
+
+<div class="container mt-5">
+    <h2>Eliminar Unidad</h2>
+    <p>¿Está seguro de que desea eliminar a la unidad<?php echo $persona['codigo_interno']; ?>?</p>
+    <form method="POST">
+        <button type="submit" class="btn btn-danger">Eliminar</button>
+        <a href="read.php" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>

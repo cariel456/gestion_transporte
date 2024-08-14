@@ -14,8 +14,6 @@ if (!checkPermission($requiredPermission)) {
     exit();
 }
 
-include ROOT_PATH . '/includes/header.php';
-
 $terminales = getAllTerminales();
 
 if (!isset($_GET['id'])) {
@@ -45,6 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = "Error al actualizar el horario interurbano";
     }
 }
+include ROOT_PATH . '/includes/header.php';
 ?>
 
 <div class="container mt-5">

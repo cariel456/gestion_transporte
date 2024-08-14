@@ -3,8 +3,6 @@ require_once '../../config/config.php';
 require_once ROOT_PATH . '/includes/auth.php';
 require_once ROOT_PATH . '/includes/functions.php';
 
-include ROOT_PATH . '/includes/header.php'; 
-
 $roles = getAllRoles(); // Asumiendo que tienes una función para obtener todos los roles
 
 requireLogin();
@@ -32,6 +30,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = "Error al crear el usuario";
     }
 }
+
+include ROOT_PATH . '/includes/header.php'; 
+
 ?>
 
 <div class="container mt-5">
