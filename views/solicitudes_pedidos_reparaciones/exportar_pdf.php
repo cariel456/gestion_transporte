@@ -11,7 +11,7 @@ function escape($value) {
 }
 
 function getSelectedFields() {
-    $allFields = ['numero_solicitud', 'fecha_solicitud', 'solicitante_nombre', 'nombre_localidad', 'unidad_codigo', 'nivel_urgencia', 'grupo_funcion', 'especialidades', 'conductor_nombre', 'mantenimiento_nombre', 'habilitado'];
+    $allFields = ['numero_solicitud', 'fecha_solicitud', 'solicitante_nombre', 'nombre_localidad', 'unidad_codigo', 'nivel_urgencia', 'nombre_grupo_funcion', 'especialidades', 'conductor_nombre', 'mantenimiento_nombre', 'estado_solicitud'];
     $selectedFields = [];
 
     $filtersApplied = false;
@@ -45,6 +45,12 @@ $sqlFields = implode(', ', array_map(function($field) {
             return "l.nombre_localidad";
         case 'especialidades':
             return "GROUP_CONCAT(DISTINCT et.nombre_especialidad SEPARATOR ', ') AS especialidades";
+        case 'nivel_urgencia':
+            return "nu.nombre_urgencia AS nombre_urgencia";
+        case 'nombre_grupo_funcion':
+            return "gf.nombre_grupo_funcion AS nombre_grupo_funcion";
+        case 'estado_solicitud':
+            return "es.nombre_estado AS estado_solicitud";
         default:
             return "s.$field";
     }
@@ -59,6 +65,15 @@ $sql = "SELECT $sqlFields
         LEFT JOIN localidades l ON s.ubicacion = l.id
         LEFT JOIN solicitud_especialidades se ON s.id = se.solicitud_id
         LEFT JOIN especialidades_talleres et ON se.especialidad_id = et.id
+        LEFT JOIN niveles_urgencias nu ON s.nivel_urgencia = nu.id
+        LEFT JOIN grupos_funciones gf ON s.grupo_funcion = gf.id
+        LEFT JOIN (
+            SELECT solicitud_id, MAX(fecha_cambio) as ultima_fecha
+            FROM historial_estados_solicitud
+            GROUP BY solicitud_id
+        ) ult_estado ON s.id = ult_estado.solicitud_id
+        LEFT JOIN historial_estados_solicitud hes ON ult_estado.solicitud_id = hes.solicitud_id AND ult_estado.ultima_fecha = hes.fecha_cambio
+        LEFT JOIN estados_solicitud es ON hes.estado_id = es.id
         WHERE 1=1";
 
 $whereClause = [];
@@ -83,7 +98,7 @@ if (!empty($_GET)) {
         $whereClause[] = "s.nivel_urgencia = " . escape($_GET['nivel_urgencia']);
     }
     if (!empty($_GET['grupo_funcion'])) {
-        $whereClause[] = "s.grupo_funcion LIKE '%" . escape($_GET['grupo_funcion']) . "%'";
+        $whereClause[] = "s.grupo_funcion = " . escape($_GET['grupo_funcion']);
     }
     if (!empty($_GET['especialidades'])) {
         $especialidades_seleccionadas = array_map('escape', $_GET['especialidades']);
@@ -94,9 +109,6 @@ if (!empty($_GET)) {
     }
     if (!empty($_GET['mantenimiento'])) {
         $whereClause[] = "s.nombre_completo_mantenimiento = " . escape($_GET['mantenimiento']);
-    }
-    if (isset($_GET['habilitado']) && $_GET['habilitado'] !== '') {
-        $whereClause[] = "s.habilitado = " . (int)$_GET['habilitado'];
     }
 }
 
@@ -132,12 +144,12 @@ $headers = [
     'solicitante_nombre' => ['Solicitante', 40],
     'nombre_localidad' => ['Ubicación', 40],
     'unidad_codigo' => ['Unidad', 20],
-    'nivel_urgencia' => ['Urgencia', 20],
-    'grupo_funcion' => ['Grupo Función', 30],
+    'nivel_urgencia' => ['Urgencia', 30],
+    'nombre_grupo_funcion' => ['Grupo Función', 40],
     'especialidades' => ['Especialidades', 40],
     'conductor_nombre' => ['Conductor', 40],
     'mantenimiento_nombre' => ['Mantenimiento', 40],
-    'habilitado' => ['Habilitado', 20]
+    'estado_solicitud' => ['Estado', 25]
 ];
 
 $pageWidth = $pdf->GetPageWidth() - 20;
@@ -157,7 +169,7 @@ if ($result && $result->num_rows > 0) {
     while($row = $result->fetch_assoc()) {
         foreach ($selectedFields as $field) {
             $width = $headers[$field][1] * $scaleFactor;
-            $value = $field === 'habilitado' ? ($row[$field] ? 'Sí' : 'No') : ($row[$field] ?? '');
+            $value = $row[$field] ?? '';
             $pdf->Cell($width, 6, utf8_decode($value), 1);
         }
         $pdf->Ln();
