@@ -79,17 +79,17 @@ include ROOT_PATH . '/includes/header.php';
             <td>
                 <?php 
                 $estado_actual = getEstadoActual($solicitud['id']);
-                echo $estado_actual['nombre_estado'];
+                echo $estado_actual['nombre'];
                 ?>
                 <a href="actualizar_estado.php?id=<?php echo $solicitud['id']; ?>" class="btn btn-info btn-sm">Actualizar Estado</a>
             </td>
             <td>
-                    <?php if (isset($_SESSION['user_permissions']['actualizar']) && $_SESSION['user_permissions']['actualizar']): ?>
+                    <?php //if (isset($_SESSION['user_permissions']['actualizar']) && $_SESSION['user_permissions']['actualizar']): ?>
                         <a href="update.php?id=<?php echo $solicitud['id']; ?>" class="btn btn-warning btn-sm">Actualizar</a>
-                    <?php endif; ?>
-                    <?php if (isset($_SESSION['user_permissions']['eliminar']) && $_SESSION['user_permissions']['eliminar']): ?>
+                    <?php //endif; ?>
+                    <?php //if (isset($_SESSION['user_permissions']['eliminar']) && $_SESSION['user_permissions']['eliminar']): ?>
                         <a href="delete.php?id=<?php echo $solicitud['id']; ?>" class="btn btn-danger btn-sm">Eliminar</a>
-                    <?php endif; ?>
+                    <?php //endif; ?>
             </td>
         </tr>
     <?php endforeach; ?>

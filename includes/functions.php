@@ -2,7 +2,54 @@
 $projectRoot = dirname(__FILE__, 2);
 require_once $projectRoot . '/config/db_config.php';
 
-//SECCION ESPECIALIDADES (NO ESTA EN USO)
+//------------------------------------------------------------------------------------------------------------------SERVICIOS
+// Funciones CRUD para países
+function getAllServicios() {
+    global $conn;
+    $sql = "SELECT * FROM servicios";
+    $result = $conn->query($sql);
+    $paises = array();
+    while ($row = $result->fetch_assoc()) {
+        $paises[$row['id']] = $row;
+    }
+    return $paises;
+}
+
+function getServiciosById($id) {
+    global $conn;
+    $sql = "SELECT * FROM servicios WHERE id = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    return $result->fetch_assoc();
+}
+
+function createServicios($data) {
+    global $conn;
+    $sql = "INSERT INTO servicios (nombre, descripcion) VALUES (?, ?)";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("ss", $data['nombre_pais'], $data['descripcion_pais']);
+    return $stmt->execute();
+}
+
+function updateServicios($data) {
+    global $conn;
+    $sql = "UPDATE servicios SET nombre = ?, descripcion = ? WHERE id = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("ssi",  $data['nombre'], $data['descripcion'], $data['id']);
+    return $stmt->execute();
+}
+
+function deleteServicios($id) {
+    global $conn;
+    $sql = "DELETE FROM servicios WHERE id = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $id);
+    return $stmt->execute();
+}
+
+//SECCION ESPECIALIDADES 
 function createEspecialidad($nombre, $descripcion) {
     global $conn;
     $sql = "INSERT INTO especialidades_talleres (nombre_especialidad, descripcion_especialidad) VALUES (?, ?)";
@@ -10,14 +57,12 @@ function createEspecialidad($nombre, $descripcion) {
     $stmt->bind_param("ss", $nombre, $descripcion);
     return $stmt->execute();
 }
-
 function getAllEspecialidades() {
     global $conn;
     $sql = "SELECT * FROM especialidades_talleres";
     $result = $conn->query($sql);
     return $result->fetch_all(MYSQLI_ASSOC);
 }
-
 function getEspecialidadById($id) {
     global $conn;
     $sql = "SELECT * FROM especialidades_talleres WHERE id = ?";
@@ -26,7 +71,6 @@ function getEspecialidadById($id) {
     $stmt->execute();
     return $stmt->get_result()->fetch_assoc();
 }
-
 function updateEspecialidad($id, $nombre, $descripcion) {
     global $conn;
     $sql = "UPDATE especialidades_talleres SET nombre_especialidad = ?, descripcion_especialidad = ? WHERE id = ?";
@@ -34,7 +78,6 @@ function updateEspecialidad($id, $nombre, $descripcion) {
     $stmt->bind_param("ssi", $nombre, $descripcion, $id);
     return $stmt->execute();
 }
-
 function deleteEspecialidad($id) {
     global $conn;
     $sql = "DELETE FROM especialidades_talleres WHERE id = ?";
@@ -42,7 +85,6 @@ function deleteEspecialidad($id) {
     $stmt->bind_param("i", $id);
     return $stmt->execute();
 }
-
 
 //CATEGORIA PERSONAS
 function createCategoriaPersona($nombre, $descripcion) {
@@ -52,14 +94,12 @@ function createCategoriaPersona($nombre, $descripcion) {
     $stmt->bind_param("ss", $nombre, $descripcion);
     return $stmt->execute();
 }
-
 function getAllCategoriasPersona() {
     global $conn;
     $sql = "SELECT * FROM categoria_persona";
     $result = $conn->query($sql);
     return $result->fetch_all(MYSQLI_ASSOC);
 }
-
 function getCategoriaPersonaById($id) {
     global $conn;
     $sql = "SELECT * FROM categoria_persona WHERE id = ?";
@@ -68,7 +108,6 @@ function getCategoriaPersonaById($id) {
     $stmt->execute();
     return $stmt->get_result()->fetch_assoc();
 }
-
 function updateCategoriaPersona($id, $nombre, $descripcion) {
     global $conn;
     $sql = "UPDATE categoria_persona SET nombre_categoria = ?, descripcion_categoria = ? WHERE id = ?";
@@ -76,7 +115,6 @@ function updateCategoriaPersona($id, $nombre, $descripcion) {
     $stmt->bind_param("ssi", $nombre, $descripcion, $id);
     return $stmt->execute();
 }
-
 function deleteCategoriaPersona($id) {
     global $conn;
     $sql = "DELETE FROM categoria_persona WHERE id = ?";
@@ -84,7 +122,6 @@ function deleteCategoriaPersona($id) {
     $stmt->bind_param("i", $id);
     return $stmt->execute();
 }
-
 
 //SECCION SOLICITUDES DE PEDIDOS DE REPARACIONES
 function createSolicitudPedidoReparacion($data) {
@@ -135,7 +172,6 @@ function createSolicitudPedidoReparacion($data) {
         return false;
     }
 }
-
 function getAllSolicitudesPedidosReparaciones() {
     global $conn;
     $sql = "SELECT spr.*, p1.nombre_personal AS conductor, p2.nombre_personal AS mantenimiento, u.codigo_interno AS unidad, p3.nombre_personal AS solicitante, l.nombre_localidad AS ubicacion
@@ -148,7 +184,6 @@ function getAllSolicitudesPedidosReparaciones() {
     $result = $conn->query($sql);
     return $result->fetch_all(MYSQLI_ASSOC);
 }
-
 function getSolicitudPedidoReparacionById($id) {
     global $conn;
     $sql = "SELECT * FROM solicitudes_pedidos_reparaciones WHERE id = ?";
@@ -157,8 +192,6 @@ function getSolicitudPedidoReparacionById($id) {
     $stmt->execute();
     return $stmt->get_result()->fetch_assoc();
 }
-
-
 function updateSolicitudPedidoReparacion($id, $data) {
     global $conn;
     $conn->begin_transaction();
@@ -211,8 +244,6 @@ function updateSolicitudPedidoReparacion($id, $data) {
         return false;
     }
 }
-
-
 function deleteSolicitudPedidoReparacion($id) {
     global $conn;
     $sql = "DELETE FROM solicitudes_pedidos_reparaciones WHERE id = ?";
@@ -220,7 +251,6 @@ function deleteSolicitudPedidoReparacion($id) {
     $stmt->bind_param("i", $id);
     return $stmt->execute();
 }
-
 function getEspecialidadesBySolicitudId($solicitud_id) {
     global $conn;
     $sql = "SELECT et.nombre_especialidad 
@@ -265,10 +295,9 @@ function getAllEstados() {
     $result = $conn->query($sql);
     return $result->fetch_all(MYSQLI_ASSOC);
 }
-
 function getEstadoActual($solicitud_id) {
     global $conn;
-    $sql = "SELECT es.id, es.nombre_estado 
+    $sql = "SELECT es.id, es.nombre
             FROM solicitudes_pedidos_reparaciones spr
             JOIN estados_solicitud es ON spr.estado_actual_id = es.id
             WHERE spr.id = ?";
@@ -278,8 +307,6 @@ function getEstadoActual($solicitud_id) {
     return $stmt->get_result()->fetch_assoc();
 }
 
-
-
 // Funciones para obtener datos de las tablas relacionadas
 function getAllEspecialidadesTalleres() {
     global $conn;
@@ -287,21 +314,18 @@ function getAllEspecialidadesTalleres() {
     $result = $conn->query($sql);
     return $result->fetch_all(MYSQLI_ASSOC);
 }
-
 function getAllPersonal() {
     global $conn;
     $sql = "SELECT * FROM personal";
     $result = $conn->query($sql);
     return $result->fetch_all(MYSQLI_ASSOC);
 }
-
 function getAllUnidades() {
     global $conn;
     $sql = "SELECT id, codigo_interno, descripcion, habilitado, numero_unidad FROM unidades";
     $result = $conn->query($sql);
     return $result->fetch_all(MYSQLI_ASSOC);
 }
-
 function getAllLocalidades() {
     global $conn;
     $sql = "SELECT * FROM localidades ORDER BY nombre_localidad";
@@ -328,12 +352,11 @@ function getUnidadById($id) {
     $stmt->execute();
     return $stmt->get_result()->fetch_assoc();
 }
-
 function updateUnidad($id, $codigo_interno, $descripcion, $numero_unidad) {
     global $conn;
     $sql = "UPDATE unidades SET codigo_interno = ?, descripcion = ?, numero_unidad = ? WHERE id = ?";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ssiii", $codigo_interno, $descripcion, $habilitado, $numero_unidad, $id);
+    $stmt->bind_param("ssii", $codigo_interno, $descripcion, $numero_unidad, $id);
     return $stmt->execute();
 }
 
@@ -346,7 +369,7 @@ function deleteUnidad($id) {
 }
 
 
-//CONTROL DE USUARIOS 
+//------------------------------------------------------------------------------------------------------USUARIOS 
 function getUserByUsername($username) {
     global $conn;
     $sql = "SELECT * FROM usuarios WHERE nombre_usuario = ? AND habilitado = 1";
@@ -356,22 +379,18 @@ function getUserByUsername($username) {
     $result = $stmt->get_result();
     return $result->fetch_assoc();
 }
-
-
-// USUARIOS
 function getAllUsers() {
     global $conn;
     $sql = "SELECT * FROM usuarios";
     $result = $conn->query($sql);
     return $result->fetch_all(MYSQLI_ASSOC);
 }
-
-function createUser($nombre_usuario, $descripcion_usuario, $habilitado, $rol_id, $password) {
+function createUser($nombre_usuario, $descripcion_usuario, $rol_id, $password) {
     global $conn;
     $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-    $sql = "INSERT INTO usuarios (nombre_usuario, descripcion_usuario, habilitado, rol_id, password) VALUES (?, ?, ?, ?, ?)";
+    $sql = "INSERT INTO usuarios (nombre_usuario, descripcion_usuario, rol_id, password) VALUES (?, ?, ?, ?)";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ssiis", $nombre_usuario, $descripcion_usuario, $habilitado, $rol_id, $hashed_password);
+    $stmt->bind_param("ssis", $nombre_usuario, $descripcion_usuario,  $rol_id, $hashed_password);
     return $stmt->execute();
 }
 
@@ -407,7 +426,7 @@ function deleteUser($id) {
     return $stmt->execute();
 }
 
-//HORARIOS TERMINALES INTERURBANOS
+//------------------------------------------------------------------------------------------HORARIOS TERMINALES INTERURBANOS
 // Crear un nuevo horario interurbano
 function createHorarioInterurbano($terminal_salida, $hora_salida, $terminal_llegada, $hora_llegada) {
     global $conn;
@@ -416,7 +435,6 @@ function createHorarioInterurbano($terminal_salida, $hora_salida, $terminal_lleg
     $stmt->bind_param("isis", $terminal_salida, $hora_salida, $terminal_llegada, $hora_llegada);
     return $stmt->execute();
 }
-
 // Obtener un horario interurbano por ID
 function getHorarioInterurbanoById($id) {
     global $conn;
@@ -426,25 +444,24 @@ function getHorarioInterurbanoById($id) {
     $stmt->execute();
     return $stmt->get_result()->fetch_assoc();
 }
-
-// Actualizar un horario interurbano
-function updateHorarioInterurbano($id, $terminal_salida, $hora_salida, $terminal_llegada, $hora_llegada, $habilitado) {
+function insertHorarioInterurbano($servicio1, $servicio2, $servicio3, $terminal_salida, $terminal_llegada) {
     global $conn;
-    $sql = "UPDATE horarios_interurbanos SET terminal_salida = ?, hora_salida = ?, terminal_llegada = ?, hora_llegada = ?, habilitado = ? WHERE id = ?";
+    $sql = "INSERT INTO horarios_interurbanos (servicio1, servicio2, servicio3, terminal_salida, terminal_llegada) VALUES (?, ?, ?, ?, ?)";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("isisii", $terminal_salida, $hora_salida, $terminal_llegada, $hora_llegada, $habilitado, $id);
+    $stmt->bind_param("iiiii", $servicio1, $servicio2, $servicio3, $terminal_salida, $terminal_llegada);
+    
+    if ($stmt->execute()) {
+        return $conn->insert_id;
+    }
+    return false;
+}
+function insertHorarioInterurbanoDetalle($id_horario, $hora1, $hora2) {
+    global $conn;
+    $sql = "INSERT INTO horarios_interurbanos_detalle (id_horarios_interurbanos, hora1, hora2) VALUES (?, ?, ?)";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("iss", $id_horario, $hora1, $hora2);
     return $stmt->execute();
 }
-
-// Eliminar un horario interurbano
-function deleteHorarioInterurbano($id) {
-    global $conn;
-    $sql = "DELETE FROM horarios_interurbanos WHERE id = ?";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("i", $id);
-    return $stmt->execute();
-}
-
 // Obtener todas las terminales
 function getAllTerminales() {
     global $conn;
@@ -452,26 +469,6 @@ function getAllTerminales() {
     $result = $conn->query($sql);
     return $result->fetch_all(MYSQLI_ASSOC);
 }
-
-// Obtener todas las líneas
-function getAllLineas() {
-    global $conn;
-    $sql = "SELECT * FROM lineas WHERE habilitado = 1";
-    $result = $conn->query($sql);
-    return $result->fetch_all(MYSQLI_ASSOC);
-}
-
-function getLineasPorTerminal($terminal_id) {
-    global $conn;
-    $sql = "SELECT DISTINCT l.* FROM lineas l
-            JOIN horarios_interurbanos hi ON l.id = hi.linea_id
-            WHERE hi.terminal_salida = ? OR hi.terminal_llegada = ?";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ii", $terminal_id, $terminal_id);
-    $stmt->execute();
-    return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
-}
-
 function createHorariosInterurbanos($data) {
     global $conn;
     $sql = "INSERT INTO horarios_interurbanos (linea_id, terminal_salida, terminal_llegada, hora_salida, hora_llegada) VALUES (?, ?, ?, ?, ?)";
@@ -491,20 +488,103 @@ function createHorariosInterurbanos($data) {
         return false;
     }
 }
-
 function getAllHorariosInterurbanos() {
     global $conn;
-    $sql = "SELECT hi.*, l.numero AS numero_linea, l.descripcion AS descripcion_linea,
-                   t1.nombre_terminal AS terminal_salida_nombre, 
-                   t2.nombre_terminal AS terminal_llegada_nombre
+    $sql = "SELECT hi.id, 
+            s1.nombre as servicio1_nombre, 
+            s2.nombre as servicio2_nombre, 
+            s3.nombre as servicio3_nombre, 
+            ts.nombre_terminal as terminal_salida_nombre, 
+            tl.nombre_terminal as terminal_llegada_nombre 
             FROM horarios_interurbanos hi
-            JOIN lineas l ON hi.linea_id = l.id
-            JOIN terminales t1 ON hi.terminal_salida = t1.id
-            JOIN terminales t2 ON hi.terminal_llegada = t2.id
-            ORDER BY l.numero, hi.terminal_salida, hi.hora_salida";
+            LEFT JOIN servicios s1 ON hi.servicio1 = s1.id
+            LEFT JOIN servicios s2 ON hi.servicio2 = s2.id
+            LEFT JOIN servicios s3 ON hi.servicio3 = s3.id
+            JOIN terminales ts ON hi.terminal_salida = ts.id
+            JOIN terminales tl ON hi.terminal_llegada = tl.id
+            ";
     $result = $conn->query($sql);
     return $result->fetch_all(MYSQLI_ASSOC);
 }
+// Obtener detalles del horario
+function getHorarioDetails($id) {
+    global $conn;
+    $sql = "SELECT hi.*, 
+            s1.nombre as servicio1_nombre, 
+            s2.nombre as servicio2_nombre, 
+            s3.nombre as servicio3_nombre,
+            ts.nombre_terminal as terminal_salida_nombre, 
+            tl.nombre_terminal as terminal_llegada_nombre 
+            FROM horarios_interurbanos hi
+            LEFT JOIN servicios s1 ON hi.servicio1 = s1.id
+            LEFT JOIN servicios s2 ON hi.servicio2 = s2.id
+            LEFT JOIN servicios s3 ON hi.servicio3 = s3.id
+            JOIN terminales ts ON hi.terminal_salida = ts.id
+            JOIN terminales tl ON hi.terminal_llegada = tl.id
+            WHERE hi.id = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    return $result->fetch_assoc();
+}
+// Obtener detalles de horarios
+function getHorarioDetalles($id_horario) {
+    global $conn;
+    $sql = "SELECT * FROM horarios_interurbanos_detalle WHERE id_horarios_interurbanos = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $id_horario);
+    $stmt->execute();
+    return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+}
+function updateHorarioInterurbano($id, $servicio1, $servicio2, $servicio3, $terminal_salida, $terminal_llegada) {
+    global $conn;
+    $sql = "UPDATE horarios_interurbanos SET servicio1 = ?, servicio2 = ?, servicio3 = ?, terminal_salida = ?, terminal_llegada = ?, updated = CURRENT_TIMESTAMP WHERE id = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("iiiiii", $servicio1, $servicio2, $servicio3, $terminal_salida, $terminal_llegada, $id);
+    return $stmt->execute();
+}
+
+function deleteHorarioInterurbano($id) {
+    global $conn;
+    $conn->begin_transaction();
+    try {
+        // Eliminar detalles
+        $sql_detalle = "DELETE FROM horarios_interurbanos_detalle WHERE id_horarios_interurbanos = ?";
+        $stmt_detalle = $conn->prepare($sql_detalle);
+        $stmt_detalle->bind_param("i", $id);
+        $stmt_detalle->execute();
+        
+        // Eliminar maestro
+        $sql_maestro = "DELETE FROM horarios_interurbanos WHERE id = ?";
+        $stmt_maestro = $conn->prepare($sql_maestro);
+        $stmt_maestro->bind_param("i", $id);
+        $stmt_maestro->execute();
+        
+        $conn->commit();
+        return true;
+    } catch (Exception $e) {
+        $conn->rollback();
+        return false;
+    }
+}
+
+function updateHorarioInterurbanoDetalle($id, $hora1, $hora2) {
+    global $conn;
+    $sql = "UPDATE horarios_interurbanos_detalle SET hora1 = ?, hora2 = ? WHERE id = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("ssi", $hora1, $hora2, $id);
+    return $stmt->execute();
+}
+
+function deleteHorarioInterurbanoDetalle($id) {
+    global $conn;
+    $sql = "DELETE FROM horarios_interurbanos_detalle WHERE id = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $id);
+    return $stmt->execute();
+}
+
 
 
 //PERSONAL
@@ -723,20 +803,20 @@ function getAllNivelesUrgencias() {
 
 function getAllGruposFunciones() {
     global $conn;
-    $sql = "SELECT id, nombre_grupo_funcion FROM grupos_funciones";
+    $sql = "SELECT * FROM grupos_funciones";
     $result = $conn->query($sql);
     return $result->fetch_all(MYSQLI_ASSOC);
 }
 
 function getGrupoFuncionNombre($id) {
     global $conn;
-    $sql = "SELECT nombre_grupo_funcion FROM grupos_funciones WHERE id = ?";
+    $sql = "SELECT nombre FROM grupos_funciones WHERE id = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("i", $id);
     $stmt->execute();
     $result = $stmt->get_result();
     $row = $result->fetch_assoc();
-    return $row ? $row['nombre_grupo_funcion'] : 'N/A';
+    return $row ? $row['nombre'] : 'N/A';
 }
 
 function getNivelUrgenciaNombre($id) {
@@ -1118,9 +1198,167 @@ function getAllParejas() {
     return $result->fetch_all(MYSQLI_ASSOC);
 }
 
+//----------------------------------------------------------------------------------------TURNOS
 function getAllTurnos() {
     global $conn;
-    $sql = "SELECT id, nombre FROM turnos";
+    $sql = "SELECT * FROM turnos";
     $result = $conn->query($sql);
     return $result->fetch_all(MYSQLI_ASSOC);
+}
+function createTurnos($nombre, $descripcion) {
+    global $conn;
+    $sql = "INSERT INTO turnos (nombre, descripcion) VALUES (?, ?)";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("ss", $nombre, $descripcion);
+    return $stmt->execute();
+}
+function getTurnosById($id) {
+    global $conn;
+    $sql = "SELECT * FROM turnos WHERE id = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $id);
+    $stmt->execute();
+    return $stmt->get_result()->fetch_assoc();
+}
+function updateTurnos($nombre, $descripcion, $id) {
+    global $conn;
+    $sql = "UPDATE turnos SET nombre = ?, descripcion = ? WHERE id = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("ssi", $nombre, $descripcion, $id);
+    return $stmt->execute();
+}
+function deleteTurnos($id) {
+    global $conn;
+    $sql = "DELETE FROM turnos WHERE id = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $id);
+    return $stmt->execute();
+}
+
+
+
+//--------------------------------------------------------------------------------------------------DISTRIBUCION DE TURNOS
+function getTurnosDistribucionById(){
+    global $conn;
+    $sql = "SELECT * FROM turnos_distribucion WHERE id = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $id);
+    $stmt->execute();
+    return $stmt->get_result()->fetch_assoc();
+}
+// Función para crear una nueva distribución de turnos
+function createTurnosDistribucion($nombre, $descripcion, $tipo_servicio) {
+    global $conn;
+    $sql = "INSERT INTO turnos_distribucion (nombre, descripcion, tipo_servicio) VALUES (?, ?, ?)";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("ssi", $nombre, $descripcion, $tipo_servicio);
+    return $stmt->execute();
+}
+// Función para crear los detalles de la distribución de turnos
+function createTurnosDistribucionDetalles($id_distribucion, $turnos, $turnos_servicios, $personal, $fechas) {
+    global $conn;
+    $sql = "INSERT INTO turnos_distribucion_detalle (id_turnos_distribucion, turno, turnos_servicios, personal, fecha) VALUES (?, ?, ?, ?, ?)";
+    $stmt = $conn->prepare($sql);
+    foreach ($turnos as $i => $turno) {
+        $stmt->bind_param("iiiis", $id_distribucion, $turnos[$i], $turnos_servicios[$i], $personal[$i], $fechas[$i]);
+        $stmt->execute();
+    }
+    return true;
+}
+// Función para obtener los tipos de servicio
+function getTurnosTiposServicios() {
+    global $conn;
+    $sql = "SELECT * FROM turnos_tipos_servicios";
+    $result = $conn->query($sql);
+    return $result->fetch_all(MYSQLI_ASSOC);
+}
+// Función para obtener los turnos
+function getTurnos() {
+    global $conn;
+    $sql = "SELECT * FROM turnos";
+    $result = $conn->query($sql);
+    return $result->fetch_all(MYSQLI_ASSOC);
+}
+// Función para obtener los servicios de turnos
+function getTurnosServicios() {
+    global $conn;
+    $sql = "SELECT * FROM turnos_servicios";
+    $result = $conn->query($sql);
+    return $result->fetch_all(MYSQLI_ASSOC);
+}
+// Función para obtener el personal
+function getPersonal() {
+    global $conn;
+    $sql = "SELECT * FROM personal";
+    $result = $conn->query($sql);
+    return $result->fetch_all(MYSQLI_ASSOC);
+}
+//Obtener los tipos de servicios
+function getTurnosTipoServicioById($id) {
+    global $conn;
+    $sql = "SELECT * FROM turnos_tipos_servicios WHERE id = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $id);
+    $stmt->execute();
+    return $stmt->get_result()->fetch_assoc();
+}
+//Obtener los turnos distribucion
+function getTurnosDistribucion() {
+    global $conn;
+    $sql = "SELECT * FROM turnos_distribucion";
+    $result = $conn->query($sql);
+    return $result->fetch_all(MYSQLI_ASSOC);
+}
+function getTurnosDistribucionDetalles($id_distribucion) {
+    global $conn;
+    $sql = "SELECT * FROM turnos_distribucion_detalle WHERE id_turnos_distribucion = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $id_distribucion);
+    $stmt->execute();
+    return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+}
+function getTurnosServiciosById($id) {
+    global $conn;
+    $sql = "SELECT * FROM turnos_servicios WHERE id = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $id);
+    $stmt->execute();
+    return $stmt->get_result()->fetch_assoc();
+}
+function searchTurnosDistribucion($nombre = '', $descripcion = '', $tipo_servicio = 0)
+{
+    global $conn;
+    $sql = "SELECT * FROM turnos_distribucion WHERE 1=1";
+
+    if (!empty($nombre)) {
+        $sql .= " AND nombre LIKE ?";
+    }
+
+    if (!empty($descripcion)) {
+        $sql .= " AND descripcion LIKE ?";
+    }
+
+    if ($tipo_servicio > 0) {
+        $sql .= " AND tipo_servicio = ?";
+    }
+
+    $stmt = $conn->prepare($sql);
+    $params = array();
+    $i = 1;
+
+    if (!empty($nombre)) {
+        $params[] = "%$nombre%";
+    }
+
+    if (!empty($descripcion)) {
+        $params[] = "%$descripcion%";
+    }
+
+    if ($tipo_servicio > 0) {
+        $params[] = $tipo_servicio;
+    }
+
+    $stmt->bind_param(str_repeat("s", count($params)), ...$params);
+    $stmt->execute();
+    return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
 }

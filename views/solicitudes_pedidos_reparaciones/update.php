@@ -116,7 +116,7 @@ include ROOT_PATH . '/includes/header.php';
             <label for="grupo_funcion" class="form-label">Grupo Función</label>
             <select class="form-select" id="grupo_funcion" name="grupo_funcion" required>
                 <?php foreach ($grupos_funciones as $grupo) : ?>
-                    <option value="<?php echo $grupo['id']; ?>" <?php echo ($grupo['id'] == $solicitud['grupo_funcion']) ? 'selected' : ''; ?>><?php echo $grupo['nombre_grupo_funcion']; ?></option>
+                    <option value="<?php echo $grupo['id']; ?>" <?php echo ($grupo['id'] == $solicitud['grupo_funcion']) ? 'selected' : ''; ?>><?php echo $grupo['nombre']; ?></option>
                 <?php endforeach; ?>
             </select>
         </div>

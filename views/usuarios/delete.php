@@ -1,4 +1,5 @@
 <?php
+session_start();
 require_once dirname(__DIR__, 2) . '/config/config.php';
 require_once ROOT_PATH . '/includes/auth.php';
 require_once ROOT_PATH . '/includes/functions.php';
@@ -8,10 +9,10 @@ $userPermissions = getUserPermissions();
 
 // Verifica el permiso necesario para la página actual
 $requiredPermission = 'eliminar'; // 
-if (!checkPermission($requiredPermission)) {
-    header("Location: " . BASE_URL . "/views/dashboard.php?error=permission_denied");
-    exit();
-}
+//if (!checkPermission($requiredPermission)) {
+    //header("Location: " . BASE_URL . "/views/dashboard.php?error=permission_denied");
+    //exit();
+//}
 
 include ROOT_PATH . '/includes/header.php'; 
 

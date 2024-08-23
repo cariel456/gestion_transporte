@@ -13,7 +13,7 @@ if (!checkPermission('parejas_choferes', 'leer')) {
    // exit();
 }
 
-$parejas_choferes = getAllParejasChoferes();
+$parejas_choferes = getAllUnidades();
 
 include ROOT_PATH . '/includes/header.php';
 ?>

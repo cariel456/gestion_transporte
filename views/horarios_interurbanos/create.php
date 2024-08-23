@@ -1,102 +1,149 @@
 <?php
 session_start();
-require_once '../../config/config.php';
+$projectRoot = dirname(__FILE__, 3);
+require_once dirname(__DIR__, 2) . '/config/config.php';
+require_once $projectRoot . '/includes/functions.php';
 require_once ROOT_PATH . '/includes/auth.php';
-require_once ROOT_PATH . '/includes/functions.php';
 
-requireLogin();
-
-//$userPermissions = getUserPermissions();
-
-$requiredPermission = 'leer';
-//if (!checkPermission('personal', $requiredPermission)) {
-//    header("Location: " . BASE_URL . "/views/dashboard.php?error=permission_denied");
-//    exit();
-//}
-
-
+// Obtener los servicios y terminales para los dropdowns
+$servicios = getAllServicios();
 $terminales = getAllTerminales();
-$lineas = getAllLineas(); // Agregamos esta línea
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Procesar el formulario
+    $servicio1 = $_POST['servicio1'];
+    $servicio2 = $_POST['servicio2'];
+    $servicio3 = $_POST['servicio3'];
     $terminal_salida = $_POST['terminal_salida'];
     $terminal_llegada = $_POST['terminal_llegada'];
-    $horarios = [];
-
-    foreach ($_POST['linea_id'] as $key => $linea_id) {
-        if (!empty($_POST['hora_salida'][$key]) && !empty($_POST['hora_llegada'][$key])) {
-            $horarios[] = [
-                'linea_id' => $linea_id,
-                'terminal_salida' => $terminal_salida,
-                'terminal_llegada' => $terminal_llegada,
-                'hora_salida' => $_POST['hora_salida'][$key],
-                'hora_llegada' => $_POST['hora_llegada'][$key]
-            ];
+    
+    // Insertar en la tabla maestro
+    $id_horario = insertHorarioInterurbano($servicio1, $servicio2, $servicio3, $terminal_salida, $terminal_llegada);
+    
+    if ($id_horario) {
+        // Insertar detalles
+        $horas1 = $_POST['hora1'];
+        $horas2 = $_POST['hora2'];
+        
+        for ($i = 0; $i < count($horas1); $i++) {
+            insertHorarioInterurbanoDetalle($id_horario, $horas1[$i], $horas2[$i]);
         }
-    }
-
-    if (createHorariosInterurbanos($horarios)) {
-        header("Location: read.php?success=1");
+        
+        $_SESSION['message'] = "Horario interurbano creado exitosamente.";
+        header("Location: read.php");
         exit();
     } else {
-        $error = "Error al crear los horarios interurbanos";
+        $error = "Error al crear el horario interurbano.";
     }
 }
 include ROOT_PATH . '/includes/header.php';
 ?>
 
-<div class="container mt-5">
-    <h2>Crear Nuevos Horarios Interurbanos</h2>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crear Horario Interurbano</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1>Crear Horario Interurbano</h1>
+        <?php if (isset($error)): ?>
+            <div class="alert alert-danger"><?php echo $error; ?></div>
+        <?php endif; ?>
+        <form method="POST">
+            <div class="mb-3">
+                <label for="servicio1" class="form-label">Servicio 1</label>
+                <select class="form-select" id="servicio1" name="servicio1" required>
+                    <option value="">Seleccione un servicio</option>
+                    <?php foreach ($servicios as $servicio): ?>
+                        <option value="<?php echo $servicio['id']; ?>"><?php echo $servicio['nombre']; ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="servicio2" class="form-label">Servicio 2</label>
+                <select class="form-select" id="servicio2" name="servicio2">
+                    <option value="">Seleccione un servicio</option>
+                    <?php foreach ($servicios as $servicio): ?>
+                        <option value="<?php echo $servicio['id']; ?>"><?php echo $servicio['nombre']; ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="servicio3" class="form-label">Servicio 3</label>
+                <select class="form-select" id="servicio3" name="servicio3">
+                    <option value="">Seleccione un servicio</option>
+                    <?php foreach ($servicios as $servicio): ?>
+                        <option value="<?php echo $servicio['id']; ?>"><?php echo $servicio['nombre']; ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="terminal_salida" class="form-label">Terminal de Salida</label>
+                <select class="form-select" id="terminal_salida" name="terminal_salida" required>
+                    <option value="">Seleccione una terminal</option>
+                    <?php foreach ($terminales as $terminal): ?>
+                        <option value="<?php echo $terminal['id']; ?>"><?php echo $terminal['nombre_terminal']; ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="terminal_llegada" class="form-label">Terminal de Llegada</label>
+                <select class="form-select" id="terminal_llegada" name="terminal_llegada" required>
+                    <option value="">Seleccione una terminal</option>
+                    <?php foreach ($terminales as $terminal): ?>
+                        <option value="<?php echo $terminal['id']; ?>"><?php echo $terminal['nombre_terminal']; ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+            
+            <h2>Detalles de Horarios</h2>
+            <table class="table" id="detalles-table">
+                <thead>
+                    <tr>
+                        <th>Hora Salida</th>
+                        <th>Hora Llegada</th>
+                        <th>Acción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><input type="time" class="form-control" name="hora1[]" required></td>
+                        <td><input type="time" class="form-control" name="hora2[]" required></td>
+                        <td><button type="button" class="btn btn-danger btn-sm remove-row">Eliminar</button></td>
+                    </tr>
+                </tbody>
+            </table>
+            <button type="button" class="btn btn-secondary mb-3" id="add-row">Agregar Fila</button>
+            
+            <div>
+                <button type="submit" class="btn btn-primary">Guardar Horario Interurbano</button>
+            </div>
+        </form>
+    </div>
 
-    <form method="POST" id="horarioForm">
-        <div class="mb-3">
-            <label for="terminal_salida" class="form-label">Terminal de Salida</label>
-            <select class="form-control" id="terminal_salida" name="terminal_salida" required>
-                <option value="">Seleccione una terminal</option>
-                <?php foreach ($terminales as $terminal): ?>
-                    <option value="<?php echo $terminal['id']; ?>"><?php echo $terminal['nombre_terminal']; ?></option>
-                <?php endforeach; ?>
-            </select>
-        </div>
-        <div class="mb-3">
-            <label for="terminal_llegada" class="form-label">Terminal de Llegada</label>
-            <select class="form-control" id="terminal_llegada" name="terminal_llegada" required>
-                <option value="">Seleccione una terminal</option>
-                <?php foreach ($terminales as $terminal): ?>
-                    <option value="<?php echo $terminal['id']; ?>"><?php echo $terminal['nombre_terminal']; ?></option>
-                <?php endforeach; ?>
-            </select>
-        </div>
-        <div id="horarios"></div>
-        <button type="button" class="btn btn-secondary mb-3" onclick="agregarHorario()">Agregar otro horario</button>
-        <button type="submit" class="btn btn-primary">Crear Horarios</button>
-        <a href="read.php" class="btn btn-secondary">Cancelar</a>
-    </form>
-</div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.getElementById('add-row').addEventListener('click', function() {
+            var table = document.getElementById('detalles-table');
+            var row = table.insertRow(-1);
+            var cell1 = row.insertCell(0);
+            var cell2 = row.insertCell(1);
+            var cell3 = row.insertCell(2);
+            
+            cell1.innerHTML = '<input type="time" class="form-control" name="hora1[]" required>';
+            cell2.innerHTML = '<input type="time" class="form-control" name="hora2[]" required>';
+            cell3.innerHTML = '<button type="button" class="btn btn-danger btn-sm remove-row">Eliminar</button>';
+        });
 
-<script>
-function agregarHorario() {
-    const horariosDiv = document.getElementById('horarios');
-    const nuevaFila = document.createElement('div');
-    nuevaFila.className = 'row mb-3';
-    nuevaFila.innerHTML = `
-        <div class="col">
-            <select class="form-control linea-select" name="linea_id[]" required>
-                <option value="">Seleccione una línea</option>
-                <?php foreach ($lineas as $linea): ?>
-                    <option value="<?php echo $linea['id']; ?>"><?php echo $linea['numero'] . ' - ' . $linea['descripcion']; ?></option>
-                <?php endforeach; ?>
-            </select>
-        </div>
-        <div class="col">
-            <input type="time" class="form-control" name="hora_salida[]" required>
-        </div>
-        <div class="col">
-            <input type="time" class="form-control" name="hora_llegada[]" required>
-        </div>
-    `;
-    horariosDiv.appendChild(nuevaFila);
-}
-
-// Agregar el primer horario al cargar la página
-document.addEventListener('DOMContentLoaded', agregarHorario);
-</script>
+        document.getElementById('detalles-table').addEventListener('click', function(e) {
+            if (e.target.classList.contains('remove-row')) {
+                e.target.closest('tr').remove();
+            }
+        });
+    </script>
+</body>
+</html>

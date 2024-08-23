@@ -67,6 +67,18 @@ $userPermissions = $_SESSION['user_permissions'];
                     </ul>
                 </li>
                 <?php endif; ?>
+                <!--HORARIOS-->
+                <?php if (checkPermission('unidades', 'leer')): ?>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownConfig" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        HORARIOS
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownConfig">
+                        <li><a class="dropdown-item" href="<?php echo BASE_URL; ?>/views/turnos_distribucion/read.php">Distribución de Turnos</a></li>
+                        <li><a class="dropdown-item" href="<?php echo BASE_URL; ?>/views/horarios_interurbanos/read.php">Gestión Horarios Interurbanos</a></li>
+                    </ul>
+                </li>
+                <?php endif; ?>  
                 <!--PERSONAL-->
                 <?php if (checkPermission('personal', 'leer')): ?>
                 <li class="nav-item dropdown">
@@ -80,7 +92,7 @@ $userPermissions = $_SESSION['user_permissions'];
                 </li>
                 <?php endif; ?>
 
-                <?php if (checkPermission('parametros', 'leer')): ?>
+                <?php //if (checkPermission('parametros', 'leer')): ?>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownConfig" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         PARÁMETROS
@@ -92,10 +104,10 @@ $userPermissions = $_SESSION['user_permissions'];
                         <li><a class="dropdown-item" href="<?php echo BASE_URL; ?>/views/niveles_urgencias/read.php">Niveles de Urgencia</a></li>
                         <li><a class="dropdown-item" href="<?php echo BASE_URL; ?>/views/grupos_funciones/read.php">Grupos de Funciones</a></li>
                         <li><a class="dropdown-item" href="<?php echo BASE_URL; ?>/views/especialidades_talleres/read.php">Especialidades de Talleres</a></li>
-                        <li><a class="dropdown-item" href="<?php echo BASE_URL; ?>/views/estados_solicitud/read.php">Estados de Solicitud</a></li>
+                        <li><a class="dropdown-item" href="<?php echo BASE_URL; ?>/views/servicios/read.php">Servicios</a></li>
                     </ul>
                 </li>
-                <?php endif; ?>    
+                <?php //endif; ?>    
             </div>
             <!--CERRAR SESION-->
             <ul class="navbar-nav">

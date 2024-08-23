@@ -1,9 +1,10 @@
 <?php
+session_start();
 require_once '../../config/config.php';
 require_once ROOT_PATH . '/includes/auth.php';
 require_once ROOT_PATH . '/includes/functions.php';
 
-$roles = getAllRoles(); // Asumiendo que tienes una función para obtener todos los roles
+//$roles = getAllRoles(); // Asumiendo que tienes una función para obtener todos los roles
 
 requireLogin();
 
@@ -11,19 +12,18 @@ $userPermissions = getUserPermissions();
 
 // Verifica el permiso necesario para la página actual
 $requiredPermission = 'leer'; // 
-if (!checkPermission($requiredPermission)) {
-    header("Location: " . BASE_URL . "/views/dashboard.php?error=permission_denied");
-    exit();
-}
+//if (!checkPermission($requiredPermission)) {
+    //header("Location: " . BASE_URL . "/views/dashboard.php?error=permission_denied");
+   // exit();
+//}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nombre_usuario = $_POST['nombre_usuario'];
     $descripcion_usuario = $_POST['descripcion_usuario'];
-    $habilitado = isset($_POST['habilitado']) ? 1 : 0;
     $role_id = $_POST['role_id'];
     $password = $_POST['password'];
 
-    if (createUser($nombre_usuario, $descripcion_usuario, $habilitado, $role_id, $password)) {
+    if (createUser($nombre_usuario, $descripcion_usuario, $role_id, $password)) {
         header("Location: read.php");
         exit();
     } else {
@@ -48,10 +48,6 @@ include ROOT_PATH . '/includes/header.php';
         <label for="descripcion_usuario" class="form-label">Descripción</label>
         <textarea class="form-control" id="descripcion_usuario" name="descripcion_usuario"></textarea>
     </div>
-    <div class="mb-3 form-check">
-        <input type="checkbox" class="form-check-input" id="habilitado" name="habilitado" checked>
-        <label class="form-check-label" for="habilitado">Habilitado</label>
-    </div>
     <div class="mb-3">
         <label for="role_id" class="form-label">Rol</label>
         <select class="form-control" id="role_id" name="role_id" required>
@@ -65,9 +61,9 @@ include ROOT_PATH . '/includes/header.php';
         <input type="password" class="form-control" id="password" name="password" required>
     </div>
     
-    <?php if (checkPermission('crear')): ?>
+    <?php //if (checkPermission('crear')): ?>
         <a href="create.php" class="btn btn-primary mb-3">Crear</a>
-    <?php endif; ?>
-    <a href="read.php" class="btn btn-secondary">Cancelar</a>
+    <?php //endif; ?>
+    <a href="read.php" class="btn btn-secondary mb-3">Cancelar</a>
 </form>
 </div>

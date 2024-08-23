@@ -118,7 +118,7 @@ include ROOT_PATH . '/includes/header.php';
                 <select class="form-select" id="grupo_funcion" name="grupo_funcion" required>
                     <option value="">Seleccione un grupo función</option>
                     <?php foreach ($grupos_funciones as $grupo) : ?>
-                        <option value="<?php echo $grupo['id']; ?>"><?php echo $grupo['nombre_grupo_funcion']; ?></option>
+                        <option value="<?php echo $grupo['id']; ?>"><?php echo $grupo['nombre']; ?></option>
                     <?php endforeach; ?>
                 </select>
             </div>
