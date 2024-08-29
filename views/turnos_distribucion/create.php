@@ -1,5 +1,4 @@
 <?php
-// Incluir los archivos necesarios
 session_start();
 $projectRoot = dirname(__FILE__, 3);
 require_once dirname(__DIR__, 2) . '/config/config.php';
@@ -27,16 +26,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $descripcion = $_POST['descripcion'];
     $tipoServicio = $_POST['tipo_servicio'];
 
-    if (createTurnosDistribucion($nombre, $descripcion, $tipoServicio)) {
-        $id = $conn->insert_id;
+    // Insertar en la tabla maestro
+    $id_distribucion = createTurnosDistribucion($nombre, $descripcion, $tipoServicio);
+    
+    if ($id_distribucion) {
+        // Insertar detalles
         $turnos = $_POST['turnos'];
         $turnosServicios = $_POST['turnos_servicios'];
         $personals = $_POST['personal'];
         $fechas = $_POST['fechas'];
-
-        createTurnosDistribucionDetalles($id, $turnos, $turnosServicios, $personals, $fechas);
-        header("Location: read.php");
-        exit();
+        
+        if (createTurnosDistribucionDetalles($id_distribucion, $turnos, $turnosServicios, $personals, $fechas)) {
+            $_SESSION['message'] = "Distribución de turnos creada exitosamente.";
+            header("Location: read.php");
+            exit();
+        } else {
+            $error = "Error al crear los detalles de la distribución de turnos.";
+        }
     } else {
         $error = "Error al crear la distribución de turnos.";
     }
@@ -91,25 +97,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <td>
                             <select class="form-select" name="turnos[]" required>
                                 <option value="">Seleccione un turno</option>
-                                <?php foreach ($turnos as $turno) { ?>
+                                <?php foreach ($turnos as $turno) : ?>
                                     <option value="<?php echo $turno['id']; ?>"><?php echo $turno['nombre']; ?></option>
-                                <?php } ?>
+                                <?php endforeach; ?>
                             </select>
                         </td>
                         <td>
                             <select class="form-select" name="turnos_servicios[]" required>
                                 <option value="">Seleccione un servicio</option>
-                                <?php foreach ($turnosServicios as $servicio) { ?>
+                                <?php foreach ($turnosServicios as $servicio) : ?>
                                     <option value="<?php echo $servicio['id']; ?>"><?php echo $servicio['nombre']; ?></option>
-                                <?php } ?>
+                                <?php endforeach; ?>
                             </select>
                         </td>
                         <td>
                             <select class="form-select" name="personal[]" required>
                                 <option value="">Seleccione un personal</option>
-                                <?php foreach ($personal as $p) { ?>
+                                <?php foreach ($personal as $p) : ?>
                                     <option value="<?php echo $p['id']; ?>"><?php echo $p['nombre_personal']; ?></option>
-                                <?php } ?>
+                                <?php endforeach; ?>
                             </select>
                         </td>
                         <td>
@@ -121,12 +127,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </tr>
                 </tbody>
             </table>
-            <button type="button" class="btn btn-primary" id="add-row">Agregar Fila</button>
-            <button type="submit" class="btn btn-success">Crear</button>
-            <a href="read.php" class="btn btn-secondary">Cancelar</a>
+            <button type="button" class="btn btn-secondary mb-3" id="add-row">Agregar Fila</button>
+            <div>
+                <button type="submit" class="btn btn-primary">Guardar Distribución de Turnos</button>
+                <a href="read.php" class="btn btn-secondary">Cancelar</a>
+            </div>
         </form>
     </div>
-    <script>
+   <script>
         // Generar las opciones de los elementos <select> una vez
         var turnosOptions = '';
         <?php foreach ($turnos as $turno) { ?>

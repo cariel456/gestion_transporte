@@ -1,17 +1,15 @@
 <?php
-session_start();
-require_once dirname(__DIR__, 2) . '/config/config.php';
-require_once ROOT_PATH . '/includes/auth.php';
-require_once ROOT_PATH . '/includes/functions.php';
+$projectRoot = dirname(__FILE__, 3); 
+require_once dirname(__DIR__, 2) . '/config/config.php'; 
+require_once ROOT_PATH . '/sec/init.php';
+require_once ROOT_PATH . '/includes/session.php';   
+require_once ROOT_PATH . '/sec/auth_check.php';       
+require_once $projectRoot . '/includes/functions.php'; 
+
+// Actualizar la última actividad
+$_SESSION['last_activity'] = time();
 
 requireLogin();
-
-$userPermissions = getUserPermissions();
-
-if (!checkPermission('taller', 'leer')) {
-    //header("Location: " . BASE_URL . "/views/dashboard.php?error=permission_denied");
-    //exit();
-}
 
 $solicitudes = getAllSolicitudesPedidosReparaciones();
 $niveles_urgencias = getAllNivelesUrgencias();
@@ -38,7 +36,7 @@ include ROOT_PATH . '/includes/header.php';
             <a href="create.php" class="btn btn-success mb-3">Crear Solicitud</a>
         <?php //endif; ?>
 
-        <a href="../dashboard.php" class="btn btn-secondary mb-3">Volver</a>
+        <a href="/../includes/header.php" class="btn btn-secondary mb-3">Volver</a>
     <table class="table table-striped">
         <thead>
             <tr>

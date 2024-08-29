@@ -2,52 +2,55 @@
 session_start();
 $projectRoot = dirname(__FILE__, 3);
 require_once dirname(__DIR__, 2) . '/config/config.php';
-require_once ROOT_PATH . '/includes/auth.php';
 require_once $projectRoot . '/includes/functions.php';
-require_once $projectRoot . '/views/tcpdf.php'; // Asumiendo que tienes la librería TCPDF instalada
+require_once ROOT_PATH . '/includes/auth.php';
+require_once ROOT_PATH . '/lib/fpdf.php';
 
-use \views\turnos_distribucion\tcpdf;
+$turnosDistribucion=getTurnosDistribucion();
 
-// Verificar si el usuario está autenticado
-requireLogin();
+class PDF extends FPDF
+{
+    function Header()
+    {
+        // Logo
+        $this->Image(ROOT_PATH . '/extras/lgh.jpg', 10, 6, 30);
+        // Título
+        $this->SetFont('Arial', 'B', 15);
+        $this->SetXY(50, 15);
+        $this->Cell(0, 10, utf8_decode('Reporte de Distribuciones de Turnos'), 0, 1, 'C');
+        $this->Ln(20);
+    }
 
-// Obtener los parámetros de búsqueda (si los hay)
-$nombre = $_GET['nombre'] ?? '';
-$descripcion = $_GET['descripcion'] ?? '';
-$tipoServicio = $_GET['tipo_servicio'] ?? 0;
+    function Footer()
+    {
+        $this->SetY(-15);
+        $this->SetFont('Arial', 'I', 8);
+        $this->Cell(0, 10, utf8_decode('Página ' . $this->PageNo() . '/{nb}'), 0, 0, 'C');
+    }
+}
 
-// Obtener los registros filtrados
-$turnosDistribucion = searchTurnosDistribucion($nombre, $descripcion, $tipoServicio);
-
-// Generar el PDF
-$pdf = new TCPDF('P', 'mm', 'A4', true, 'UTF-8', false);
-$pdf->SetCreator(PDF_CREATOR);
-$pdf->SetAuthor('Sistema de Distribución de Turnos');
-$pdf->SetTitle('Reporte de Distribuciones de Turnos');
-$pdf->SetHeaderData('', 0, 'Reporte de Distribuciones de Turnos', '');
-$pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
-$pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
-$pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
-$pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
-$pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
-$pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
-$pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
-$pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+$pdf = new PDF();
+$pdf->AliasNbPages();
 $pdf->AddPage();
 
-// Agregar el contenido del reporte
-$html = '<h1>Reporte de Distribuciones de Turnos</h1>';
-$html .= '<table border="1" cellpadding="4" cellspacing="0">';
-$html .= '<tr><th>ID</th><th>Nombre</th><th>Descripción</th><th>Tipo de Servicio</th></tr>';
-foreach ($turnosDistribucion as $distribucion) {
-    $html .= '<tr>';
-    $html .= '<td>' . $distribucion['id'] . '</td>';
-    $html .= '<td>' . $distribucion['nombre'] . '</td>';
-    $html .= '<td>' . $distribucion['descripcion'] . '</td>';
-    $html .= '<td>' . getTurnosTipoServicioById($distribucion['tipo_servicio'])['nombre'] . '</td>';
-    $html .= '</tr>';
-}
-$html .= '</table>';
+$pdf->SetFont('Arial', 'B', 12);
+$pdf->Cell(0, 10, 'Distribuciones de Turnos', 0, 1);
+$pdf->Ln(5);
 
-$pdf->writeHTML($html, true, false, true, false, '');
-$pdf->Output('reporte_turnos_distribucion.pdf', 'I');
+$pdf->SetFont('Arial', 'B', 10);
+$pdf->Cell(20, 10, 'ID', 1);
+$pdf->Cell(50, 10, 'Nombre', 1);
+$pdf->Cell(70, 10, utf8_decode('Descripción'), 1);
+$pdf->Cell(50, 10, 'Tipo de Servicio', 1);
+$pdf->Ln();
+
+$pdf->SetFont('Arial', '', 10);
+foreach ($turnosDistribucion as $distribucion) {
+    $pdf->Cell(20, 10, $distribucion['id'], 1);
+    $pdf->Cell(50, 10, utf8_decode($distribucion['nombre']), 1);
+    $pdf->Cell(70, 10, utf8_decode($distribucion['descripcion']), 1);
+    $pdf->Cell(50, 10, utf8_decode(getTurnosTipoServicioById($distribucion['tipo_servicio'])['nombre']), 1);
+    $pdf->Ln();
+}
+
+$pdf->Output('I', 'reporte_turnos_distribucion.pdf');

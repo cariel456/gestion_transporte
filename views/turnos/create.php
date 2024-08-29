@@ -36,7 +36,7 @@ include ROOT_PATH . '/includes/header.php';
         <?php endif; ?>
         <form method="POST">
             <div class="mb-3">
-                <label for="codigo_interno" class="form-label">Código Interno</label>
+                <label for="codigo_interno" class="form-label">Nombre</label>
                 <input type="text" class="form-control" id="codigo_interno" name="nombre" required>
             </div>
             <div class="mb-3">

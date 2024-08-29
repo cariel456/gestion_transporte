@@ -1,9 +1,10 @@
 <?php 
-session_start(); 
 $projectRoot = dirname(__FILE__, 3); 
 require_once dirname(__DIR__, 2) . '/config/config.php'; 
+require_once ROOT_PATH . '/sec/init.php';
+require_once ROOT_PATH . '/includes/session.php';   
+require_once ROOT_PATH . '/sec/auth_check.php';       
 require_once $projectRoot . '/includes/functions.php'; 
-require_once ROOT_PATH . '/includes/auth.php';  
 
 $horarios = getAllHorariosInterurbanos();  
 
@@ -27,7 +28,6 @@ include ROOT_PATH . '/includes/header.php';
         <table class="table table-striped">             
             <thead>                 
                 <tr>                     
-                    <th>ID</th>                     
                     <th>Servicio 1</th>                     
                     <th>Servicio 2</th>                     
                     <th>Servicio 3</th>                     
@@ -39,7 +39,6 @@ include ROOT_PATH . '/includes/header.php';
             <tbody>                 
                 <?php foreach ($horarios as $horario): ?>                 
                 <tr>                     
-                    <td><?php echo $horario['id']; ?></td>                     
                     <td><?php echo $horario['servicio1_nombre']; ?></td>                     
                     <td><?php echo $horario['servicio2_nombre']; ?></td>                     
                     <td><?php echo $horario['servicio3_nombre']; ?></td>                     
@@ -48,7 +47,7 @@ include ROOT_PATH . '/includes/header.php';
                     <td>                         
                         <a href="view_horario.php?id=<?php echo $horario['id']; ?>" class="btn btn-info btn-sm">Ver</a>                         
                         <a href="delete_horario.php?id=<?php echo $horario['id']; ?>" class="btn btn-danger btn-sm" onclick="return confirm('¿Está seguro de que desea eliminar este horario?')">Eliminar</a>
-                        <a href="export_single.php?id=<?php echo $horario['id']; ?>" class="btn btn-success btn-sm">Exportar este horario a PDF</a>
+                        <a href="export_single.php?id=<?php echo $horario['id']; ?>" class="btn btn-success btn-sm" target="_blank">Exportar este horario a PDF</a>
                     </td>                 
                 </tr>                 
                 <?php endforeach; ?>             

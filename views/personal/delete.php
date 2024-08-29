@@ -1,18 +1,11 @@
 <?php
-session_start();
-require_once '../../config/config.php';
-require_once ROOT_PATH . '/includes/auth.php';
-require_once ROOT_PATH . '/includes/functions.php';
-
+$projectRoot = dirname(__FILE__, 3); 
+require_once dirname(__DIR__, 2) . '/config/config.php'; 
+require_once ROOT_PATH . '/sec/init.php';
+require_once ROOT_PATH . '/includes/session.php';   
+require_once ROOT_PATH . '/sec/auth_check.php';       
+require_once $projectRoot . '/includes/functions.php'; 
 requireLogin();
-
-//$userPermissions = getUserPermissions();
-
-//$requiredPermission = 'eliminar';
-//if (!checkPermission($requiredPermission)) {
-//    header("Location: " . BASE_URL . "/views/dashboard.php?error=permission_denied");
-//    exit();
-//}
 
 $id = $_GET['id'] ?? null;
 if (!$id) {

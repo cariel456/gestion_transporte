@@ -1,6 +1,5 @@
 <?php
 session_start();
-
 require_once 'error_handler.php';
 
 function redirect($url) {

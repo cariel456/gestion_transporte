@@ -1,7 +1,8 @@
 <?php
-session_start();
 require_once '../config/config.php';
-require_once ROOT_PATH . '/includes/auth.php';
+require_once ROOT_PATH . '/sec/init.php';
+require_once ROOT_PATH . '/includes/session.php';          
+require_once ROOT_PATH . '/sec/auth_check.php';    
 require_once ROOT_PATH . '/includes/functions.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -14,9 +15,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_SESSION['user_id'] = $user['id'];
         $_SESSION['username'] = $user['nombre_usuario'];
         $userPermissions = getUserPermissions($user['id']);
+
         if (!empty($userPermissions)) {
             $_SESSION['user_permissions'] = $userPermissions;
-            header("Location: " . BASE_URL . "/views/dashboard.php");
+            header("Location: " . BASE_URL . "/includes/header.php");
             exit();
         } else {
             $error = "No se encontraron permisos para este usuario";
@@ -26,7 +28,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 ?>
-
 
 <!DOCTYPE html>
 <html lang="es">
@@ -77,8 +78,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <label for="password" class="form-label">Contraseña</label>
                         <input type="password" class="form-control" id="password" name="password" required>
                     </div>
-                    <div class="d-grid">
+                    <div class="d-grid gap-2">
                         <button type="submit" class="btn btn-primary btn-lg">Ingresar</button>
+                        <a href="registro.php" class="btn btn-secondary btn-lg">Registrar usuario</a>
                     </div>
                 </form>
             </div>

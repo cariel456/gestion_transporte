@@ -1,18 +1,12 @@
 <?php
-session_start();
-require_once '../../config/config.php';
-require_once ROOT_PATH . '/includes/auth.php';
-require_once ROOT_PATH . '/includes/functions.php';
+$projectRoot = dirname(__FILE__, 3); 
+require_once dirname(__DIR__, 2) . '/config/config.php'; 
+require_once ROOT_PATH . '/sec/init.php';
+require_once ROOT_PATH . '/includes/session.php';   
+require_once ROOT_PATH . '/sec/auth_check.php';       
+require_once $projectRoot . '/includes/functions.php'; 
 
 requireLogin();
-
-//$userPermissions = getUserPermissions();
-
-//$requiredPermission = 'actualizar';
-//if (!checkPermission($requiredPermission)) {
-//    header("Location: " . BASE_URL . "/views/dashboard.php?error=permission_denied");
-//    exit();
-//}
 
 $id = $_GET['id'] ?? null;
 if (!$id) {
@@ -32,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $vencimiento_licencia = $_POST['vencimiento_licencia'];
     $habilitado = isset($_POST['habilitado']) ? 1 : 0;
 
-    if (updatePersonal($id, $codigo, $categoria, $nombre_personal, $legajo, $tarjeta, $vencimiento_licencia, $habilitado)) {
+    if (updatePersonal($id, $codigo, $categoria, $nombre_personal, $legajo, $tarjeta, $vencimiento_licencia)) {
         header("Location: read.php");
         exit();
     } else {
@@ -47,7 +41,7 @@ include ROOT_PATH . '/includes/header.php';
     <form method="POST">
         <div class="mb-3">
             <label for="codigo" class="form-label">Código</label>
-            <input type="number" class="form-control" id="codigo" name="codigo" value="<?php echo $persona['codigo']; ?>" required>
+            <input type="number" class="form-control" id="codigo" name="codigo" value="<?php echo $persona['codigo']; ?>" >
         </div>
         <div class="mb-3">
             <label for="categoria" class="form-label">Categoría</label>
@@ -73,11 +67,7 @@ include ROOT_PATH . '/includes/header.php';
             <label for="vencimiento_licencia" class="form-label">Vencimiento Licencia</label>
             <input type="date" class="form-control" id="vencimiento_licencia" name="vencimiento_licencia" value="<?php echo $persona['vencimiento_licencia']; ?>" >
         </div>
-        
-        <div class="mb-3 form-check">
-            <input type="checkbox" class="form-check-input" id="habilitado" name="habilitado"  checked <?php echo $persona['habilitado'] ? 'checked' : ''; ?>>
-            <label class="form-check-label" for="habilitado">Habilitado</label>
-        </div>
+    
         <button type="submit" class="btn btn-primary">Actualizar</button>
         <a href="read.php" class="btn btn-secondary">Cancelar</a>
     </form>

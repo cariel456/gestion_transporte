@@ -23,6 +23,7 @@ include ROOT_PATH . '/includes/header.php';
     <div class="container mt-5">
         <h1>Niveles de Urgencia</h1>
         <a href="create.php" class="btn btn-success mb-3">Crear Nivel de Urgencia</a>
+        <a href="../dashboard.php" class="btn btn-secondary mb-3">Cancelar</a>
         <table class="table table-striped">
             <thead>
                 <tr>
@@ -37,7 +38,7 @@ include ROOT_PATH . '/includes/header.php';
                     <tr>
                         <td><?php echo $nivel['id']; ?></td>
                         <td><?php echo $nivel['nombre_urgencia']; ?></td>
-                        <td><?php echo $nivel['descripcion_urgencia']; ?></td>
+                        <td><?php echo $nivel['descripcion_urgencias']; ?></td>
                         <td>
                             <a href="update.php?id=<?php echo $nivel['id']; ?>" class="btn btn-warning btn-sm">Actualizar</a>
                             <a href="delete.php?id=<?php echo $nivel['id']; ?>" class="btn btn-danger btn-sm">Eliminar</a>

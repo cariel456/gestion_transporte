@@ -1,8 +1,10 @@
 <?php
-session_start();
-require_once dirname(__DIR__, 2) . '/config/config.php';
-require_once ROOT_PATH . '/includes/auth.php';
-require_once ROOT_PATH . '/includes/functions.php';
+$projectRoot = dirname(__FILE__, 3); 
+require_once dirname(__DIR__, 2) . '/config/config.php'; 
+require_once ROOT_PATH . '/sec/init.php';
+require_once ROOT_PATH . '/includes/session.php';   
+require_once ROOT_PATH . '/sec/auth_check.php';       
+require_once $projectRoot . '/includes/functions.php'; 
 
 requireLogin();
 
@@ -12,24 +14,27 @@ if (!$id) {
     exit();
 }
 
-$pais = getServiciosById($id);
-if (!$pais) {
+$servicio = getServiciosById($id);
+if (!$servicio) {
     header("Location: read.php");
     exit();
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $nombre = $_POST['nombre'];
+    $descripcion = $_POST['descripcion'];
+    
     $data = [
         'id' => $id,
-        'nombre_pais' => $_POST['nombre'],
-        'descripcion_pais' => $_POST['descripcion']
+        'nombre' => $nombre,
+        'descripcion' => $descripcion
     ];
     
     if (updateServicios($data)) {
         header("Location: read.php");
         exit();
     } else {
-        $error = "Error al actualizar";
+        $error = "Error al actualizar el servicio";
     }
 }
 
@@ -51,13 +56,14 @@ include ROOT_PATH . '/includes/header.php';
             <div class="alert alert-danger"><?php echo $error; ?></div>
         <?php endif; ?>
         <form method="POST">
+            <input type="hidden" name="id" value="<?php echo $servicio['id']; ?>">
             <div class="mb-3">
-                <label for="nombre_pais" class="form-label">Nombre</label>
-                <input type="text" class="form-control" id="nombre_pais" name="nombre" value="<?php echo $pais['nombre']; ?>" required>
+                <label for="nombre" class="form-label">Nombre</label>
+                <input type="text" class="form-control" id="nombre" name="nombre" value="<?php echo $servicio['nombre']; ?>" required>
             </div>
             <div class="mb-3">
-                <label for="descripcion_pais" class="form-label">Descripción</label>
-                <textarea class="form-control" id="descripcion_pais" name="descripcion_pais" rows="3"><?php echo $pais['descripcion']; ?></textarea>
+                <label for="descripcion" class="form-label">Descripción</label>
+                <textarea class="form-control" id="descripcion" name="descripcion" rows="3"><?php echo $servicio['descripcion']; ?></textarea>
             </div>
             <button type="submit" class="btn btn-primary">Actualizar</button>
             <a href="read.php" class="btn btn-secondary">Cancelar</a>

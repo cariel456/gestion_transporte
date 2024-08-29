@@ -20,11 +20,12 @@ if (!$nivel_urgencia) {
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $data = [
+        'id' => $id,
         'nombre_urgencia' => $_POST['nombre_urgencia'],
-        'descripcion_urgencia' => $_POST['descripcion_urgencia']
+        'descripcion_urgencias' => $_POST['descripcion_urgencias']
     ];
     
-    if (updateNivelUrgencia($id, $data)) {
+    if (updateNivelUrgencia($data)) {
         header("Location: read.php");
         exit();
     } else {
@@ -55,8 +56,8 @@ include ROOT_PATH . '/includes/header.php';
                 <input type="text" class="form-control" id="nombre_urgencia" name="nombre_urgencia" value="<?php echo $nivel_urgencia['nombre_urgencia']; ?>" required>
             </div>
             <div class="mb-3">
-                <label for="descripcion_urgencia" class="form-label">Descripción</label>
-                <textarea class="form-control" id="descripcion_urgencia" name="descripcion_urgencia" rows="3"><?php echo $nivel_urgencia['descripcion_urgencia']; ?></textarea>
+                <label for="descripcion_urgencias" class="form-label">Descripción</label>
+                <textarea class="form-control" id="descripcion_urgencias" name="descripcion_urgencias" rows="3"><?php echo $nivel_urgencia['descripcion_urgencias']; ?></textarea>
             </div>
             <button type="submit" class="btn btn-primary">Actualizar</button>
             <a href="read.php" class="btn btn-secondary">Cancelar</a>

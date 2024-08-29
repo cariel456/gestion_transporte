@@ -1,5 +1,4 @@
 <?php
-// Incluir los archivos necesarios
 session_start();
 $projectRoot = dirname(__FILE__, 3);
 require_once dirname(__DIR__, 2) . '/config/config.php';
@@ -9,19 +8,24 @@ require_once $projectRoot . '/includes/functions.php';
 // Verificar si el usuario está autenticado
 requireLogin();
 
-// Obtener los tipos de servicio
-$tiposServicio = getTurnosTiposServicios();
+// Inicializar variables de búsqueda
+$nombre = $descripcion = '';
+$tipo_servicio = 0;
 
-// Manejar el envío del formulario de búsqueda
+// Manejar la búsqueda si se envió el formulario
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nombre = $_POST['nombre'] ?? '';
     $descripcion = $_POST['descripcion'] ?? '';
-    $tipoServicio = $_POST['tipo_servicio'] ?? 0;
-
-    $turnosDistribucion = searchTurnosDistribucion($nombre, $descripcion, $tipoServicio);
+    $tipo_servicio = $_POST['tipo_servicio'] ?? 0;
+    
+    // Realizar la búsqueda con los filtros proporcionados
+    $distribuciones = searchTurnosDistribucion($nombre, $descripcion, $tipo_servicio);
 } else {
-    $turnosDistribucion = getTurnosDistribucion();
+    // Si no se ha realizado una búsqueda, obtener todas las distribuciones
+    $distribuciones = getTurnosDistribucion();
 }
+
+include ROOT_PATH . '/includes/header.php';
 ?>
 
 <!DOCTYPE html>
@@ -29,62 +33,72 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Buscar Distribuciones de Turnos</title>
+    <title>Lista de Distribuciones de Turnos</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
     <div class="container mt-5">
-        <h1>Buscar Distribuciones de Turnos</h1>
-        <form method="POST">
-            <div class="mb-3">
-                <label for="nombre" class="form-label">Nombre</label>
-                <input type="text" class="form-control" id="nombre" name="nombre" value="<?php echo $nombre; ?>">
+        <h1>Lista de Distribuciones de Turnos</h1>
+        
+        <!-- Formulario de búsqueda -->
+        <form method="POST" class="mb-4">
+            <div class="row">
+                <div class="col-md-3">
+                    <input type="text" name="nombre" class="form-control" placeholder="Nombre" value="<?php echo htmlspecialchars($nombre); ?>">
+                </div>
+                <div class="col-md-3">
+                    <input type="text" name="descripcion" class="form-control" placeholder="Descripción" value="<?php echo htmlspecialchars($descripcion); ?>">
+                </div>
+                <div class="col-md-3">
+                    <select name="tipo_servicio" class="form-control">
+                        <option value="">Todos los tipos de servicio</option>
+                        <?php foreach (getTurnosTiposServicios() as $tipo): ?>
+                            <option value="<?php echo $tipo['id']; ?>" <?php echo ($tipo_servicio == $tipo['id']) ? 'selected' : ''; ?>>
+                                <?php echo htmlspecialchars($tipo['nombre']); ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <button type="submit" class="btn btn-primary">Buscar</button>
+                    <a href="<?php echo $_SERVER['PHP_SELF']; ?>" class="btn btn-secondary">Limpiar</a>
+                </div>
             </div>
-            <div class="mb-3">
-                <label for="descripcion" class="form-label">Descripción</label>
-                <input type="text" class="form-control" id="descripcion" name="descripcion" value="<?php echo $descripcion; ?>">
-            </div>
-            <div class="mb-3">
-                <label for="tipo_servicio" class="form-label">Tipo de Servicio</label>
-                <select class="form-select" id="tipo_servicio" name="tipo_servicio">
-                    <option value="0">Todos</option>
-                    <?php foreach ($tiposServicio as $tipoServicio) : ?>
-                        <option value="<?php echo $tipoServicio['id']; ?>" <?php echo $tipoServicio['id'] == $tipoServicio ? 'selected' : ''; ?>><?php echo $tipoServicio['nombre']; ?></option>
-                    <?php endforeach; ?>
-                </select>
-            </div>
-            <button type="submit" class="btn btn-primary">Buscar</button>
-            <a href="pdf.php" class="btn btn-danger">Exportar a PDF</a>
         </form>
-        <hr>
-        <table class="table table-striped table-hover">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Nombre</th>
-                    <th>Descripción</th>
-                    <th>Tipo de Servicio</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($turnosDistribucion as $distribucion) : ?>
+
+        <?php if (empty($distribuciones)): ?>
+            <p>No se encontraron resultados.</p>
+        <?php else: ?>
+            <table class="table table-striped">
+                <thead>
                     <tr>
-                        <td><?php echo $distribucion['id']; ?></td>
-                        <td><?php echo $distribucion['nombre']; ?></td>
-                        <td><?php echo $distribucion['descripcion']; ?></td>
-                        <td><?php echo getTurnosTipoServicioById($distribucion['tipo_servicio'])['nombre']; ?></td>
-                        <td>
-                            <a href="update.php?id=<?php echo $distribucion['id']; ?>" class="btn btn-primary btn-sm">Editar</a>
-                            <form method="POST" class="d-inline">
-                                <input type="hidden" name="delete_id" value="<?php echo $distribucion['id']; ?>">
-                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Está seguro que desea eliminar esta distribución de turnos?')">Eliminar</button>
-                            </form>
-                        </td>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Descripción</th>
+                        <th>Tipo de Servicio</th>
+                        <th>Acciones</th>
                     </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    <?php foreach ($distribuciones as $distribucion): ?>
+                        <tr>
+                            <td><?php echo $distribucion['id']; ?></td>
+                            <td><?php echo htmlspecialchars($distribucion['nombre']); ?></td>
+                            <td><?php echo htmlspecialchars($distribucion['descripcion']); ?></td>
+                            <td><?php echo htmlspecialchars(getTurnosTipoServicioById($distribucion['tipo_servicio'])['nombre']); ?></td>
+                            <td>
+                                <a href="view.php?id=<?php echo $distribucion['id']; ?>" class="btn btn-primary btn-sm">Ver</a>
+                                <a href="edit.php?id=<?php echo $distribucion['id']; ?>" class="btn btn-warning btn-sm">Editar</a>
+                                <a href="delete.php?id=<?php echo $distribucion['id']; ?>" class="btn btn-danger btn-sm" onclick="return confirm('¿Estás seguro de que quieres eliminar esta distribución?')">Eliminar</a>
+                                <a href="exportar_pdf.php?id=<?php echo $distribucion['id']; ?>" class="btn btn-info btn-sm">Exportar a PDF</a>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        <?php endif; ?>
+        
+        <a href="create.php" class="btn btn-success">Crear Nueva Distribución de Turnos</a>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>

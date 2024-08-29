@@ -7,8 +7,8 @@ require_once ROOT_PATH . '/includes/functions.php';
 requireLogin();
 
 if (!checkPermission('paises', 'leer')) {
-    //header("Location: " . BASE_URL . "/views/dashboard.php?error=permission_denied");
-    //exit();
+    // header("Location: " . BASE_URL . "/views/dashboard.php?error=permission_denied");
+    // exit();
 }
 
 $paises = getAllPaises();
@@ -23,9 +23,30 @@ include ROOT_PATH . '/includes/header.php';
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Países</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .content {
+            flex: 1;
+        }
+
+        footer {
+            flex-shrink: 0;
+        }
+    </style>
 </head>
 <body>
-    <div class="container mt-5">
+    <div class="container mt-5 content">
         <h1>Países</h1>
 
         <?php //if (checkPermission('paises', 'crear')): ?>
@@ -61,6 +82,11 @@ include ROOT_PATH . '/includes/header.php';
             </tbody>
         </table>
     </div>
+
+    <footer class="bg-light text-center">
+        <?php include ROOT_PATH . '/includes/footer.php'; ?>
+    </footer>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

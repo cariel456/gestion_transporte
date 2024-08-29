@@ -22,7 +22,7 @@ $provincias = getAllProvincias();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $data = [
-        'id' => $_POST['id'],
+        'id' => $id,
         'nombre_localidad' => $_POST['nombre_localidad'],
         'descripcion_localidad' => $_POST['descripcion_localidad'],
         'provincia' => $_POST['provincia']

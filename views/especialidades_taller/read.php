@@ -1,8 +1,13 @@
 <?php
-$projectRoot = dirname(__FILE__, 3);
-require_once $projectRoot . '/includes/functions.php';
+$projectRoot = dirname(__FILE__, 3); 
+require_once dirname(__DIR__, 2) . '/config/config.php'; 
+require_once ROOT_PATH . '/sec/init.php';
+require_once ROOT_PATH . '/includes/session.php';   
+require_once ROOT_PATH . '/sec/auth_check.php';       
+require_once $projectRoot . '/includes/functions.php'; 
 
 $especialidades = getAllEspecialidades();
+include ROOT_PATH . '/includes/header.php';
 ?>
 
 <!DOCTYPE html>
@@ -17,6 +22,7 @@ $especialidades = getAllEspecialidades();
     <div class="container mt-5">
         <h1>Especialidades Taller</h1>
         <a href="create.php" class="btn btn-primary mb-3">Crear Nueva Especialidad</a>
+        <a href="../dashboard.php" class="btn btn-secondary mb-3">Volver</a>
         <table class="table table-striped">
             <thead>
                 <tr>

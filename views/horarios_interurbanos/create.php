@@ -1,9 +1,9 @@
 <?php
-session_start();
-$projectRoot = dirname(__FILE__, 3);
-require_once dirname(__DIR__, 2) . '/config/config.php';
-require_once $projectRoot . '/includes/functions.php';
-require_once ROOT_PATH . '/includes/auth.php';
+session_start(); 
+$projectRoot = dirname(__FILE__, 3); 
+require_once dirname(__DIR__, 2) . '/config/config.php'; 
+require_once $projectRoot . '/includes/functions.php'; 
+require_once ROOT_PATH . '/sec/auth_check.php';
 
 // Obtener los servicios y terminales para los dropdowns
 $servicios = getAllServicios();

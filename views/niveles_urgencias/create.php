@@ -9,7 +9,7 @@ requireLogin();
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $data = [
         'nombre_urgencia' => $_POST['nombre_urgencia'],
-        'descripcion_urgencia' => $_POST['descripcion_urgencia']
+        'descripcion_urgencias' => $_POST['descripcion_urgencias']
     ];
     
     if (createNivelUrgencia($data)) {
@@ -43,8 +43,8 @@ include ROOT_PATH . '/includes/header.php';
                 <input type="text" class="form-control" id="nombre_urgencia" name="nombre_urgencia" required>
             </div>
             <div class="mb-3">
-                <label for="descripcion_urgencia" class="form-label">Descripción</label>
-                <textarea class="form-control" id="descripcion_urgencia" name="descripcion_urgencia" rows="3"></textarea>
+                <label for="descripcion_urgencias" class="form-label">Descripción</label>
+                <textarea class="form-control" id="descripcion_urgencia" name="descripcion_urgencias" rows="3"></textarea>
             </div>
             <button type="submit" class="btn btn-primary">Crear</button>
             <a href="read.php" class="btn btn-secondary">Cancelar</a>

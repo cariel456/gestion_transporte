@@ -1,19 +1,22 @@
 <?php
-session_start();
-require_once dirname(__DIR__, 2) . '/config/config.php';
-require_once ROOT_PATH . '/includes/auth.php';
-require_once ROOT_PATH . '/includes/functions.php';
+$projectRoot = dirname(__FILE__, 3); 
+require_once dirname(__DIR__, 2) . '/config/config.php'; 
+require_once ROOT_PATH . '/sec/init.php';
+require_once ROOT_PATH . '/includes/session.php';   
+require_once ROOT_PATH . '/sec/auth_check.php';       
+require_once $projectRoot . '/includes/functions.php'; 
 
 requireLogin();
 
-$userPermissions = getUserPermissions();
+// Inicializar la variable de búsqueda
+$search = isset($_GET['search']) ? $_GET['search'] : '';
 
-if (!checkPermission('turnos_parejas_choferes', 'leer')) {
-   // header("Location: " . BASE_URL . "/views/dashboard.php?error=permission_denied");
-   // exit();
+// Obtener las unidades basadas en la búsqueda
+if (!empty($search)) {
+    $unidades = getUnidadById($search);
+} else {
+    $unidades = getAllUnidades();
 }
-
-$turnos_parejas_choferes = getAllUnidades();
 
 include ROOT_PATH . '/includes/header.php';
 ?>
@@ -30,39 +33,54 @@ include ROOT_PATH . '/includes/header.php';
     <div class="container mt-5">
         <h1>Unidades</h1>
 
-        <?php //if (checkPermission('turnos_parejas_choferes', 'crear')): ?>
-            <a href="create.php" class="btn btn-success mb-3">Crear Unidad</a>
-        <?php //endif; ?>
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <?php //if (checkPermission('unidades', 'crear')): ?>
+                    <a href="create.php" class="btn btn-success">Crear Unidad</a>
+                <?php //endif; ?>
+                <a href="../dashboard.php" class="btn btn-secondary">Volver</a>
+            </div>
+            <div class="col-md-6">
+                <form action="" method="GET" class="d-flex">
+                    <input type="text" name="search" class="form-control me-2" placeholder="Buscar por código interno" value="<?php echo htmlspecialchars($search); ?>">
+                    <button type="submit" class="btn btn-primary">Buscar</button>
+                </form>
+            </div>
+        </div>
 
-        <a href="../dashboard.php" class="btn btn-secondary mb-3">Volver</a>
-
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>Código Interno</th>
-                    <th>Descripción</th>
-                    <th>Número Unidad</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($turnos_parejas_choferes as $turno) : ?>
+        <?php if (empty($unidades)): ?>
+            <p>No se encontraron unidades.</p>
+        <?php else: ?>
+            <table class="table table-striped">
+                <thead>
                     <tr>
-                        <td><?php echo $turno['codigo_interno']; ?></td>
-                        <td><?php echo $turno['descripcion']; ?></td>
-                        <td><?php echo $turno['numero_unidad']; ?></td>
-                        <td>
-                            <?php //if (checkPermission('turnos_parejas_choferes', 'actualizar')): ?>
-                                <a href="update.php?id=<?php echo $turno['id']; ?>" class="btn btn-warning btn-sm">Actualizar</a>
-                            <?php //endif; ?>
-                            <?php //if (checkPermission('turnos_parejas_choferes', 'eliminar')): ?>
-                                <a href="delete.php?id=<?php echo $turno['id']; ?>" class="btn btn-danger btn-sm">Eliminar</a>
-                            <?php //endif; ?>
-                        </td>
+                        <th>Código Interno</th>
+                        <th>Descripción</th>
+                        <th>Número Unidad</th>
+                        <th>Habilitado</th>
+                        <th>Acciones</th>
                     </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    <?php foreach ($unidades as $unidad) : ?>
+                        <tr>
+                            <td><?php echo htmlspecialchars($unidad['codigo_interno']); ?></td>
+                            <td><?php echo htmlspecialchars($unidad['descripcion']); ?></td>
+                            <td><?php echo htmlspecialchars($unidad['numero_unidad']); ?></td>
+                            <td><?php echo $unidad['habilitado'] ? 'Sí' : 'No'; ?></td>
+                            <td>
+                                <?php //if (checkPermission('unidades', 'actualizar')): ?>
+                                    <a href="update.php?id=<?php echo $unidad['id']; ?>" class="btn btn-warning btn-sm">Actualizar</a>
+                                <?php //endif; ?>
+                                <?php //if (checkPermission('unidades', 'eliminar')): ?>
+                                    <a href="delete.php?id=<?php echo $unidad['id']; ?>" class="btn btn-danger btn-sm">Eliminar</a>
+                                <?php //endif; ?>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        <?php endif; ?>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>

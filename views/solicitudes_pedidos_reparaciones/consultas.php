@@ -1,10 +1,10 @@
 <?php
-require_once '../../config/config.php';
+$projectRoot = dirname(__FILE__, 3); 
+require_once dirname(__DIR__, 2) . '/config/config.php'; 
 require_once ROOT_PATH . '/sec/init.php';
-require_once ROOT_PATH . '/sec/error_handler.php';
-require_once ROOT_PATH . '/sec/auth_check.php';
-require_once ROOT_PATH . '/includes/auth.php';
-require_once ROOT_PATH . '/includes/functions.php';
+require_once ROOT_PATH . '/includes/session.php';   
+require_once ROOT_PATH . '/sec/auth_check.php';       
+require_once $projectRoot . '/includes/functions.php'; 
 
 function escape($value) {
     global $conn;
@@ -204,7 +204,7 @@ require_once ROOT_PATH . '/includes/header.php';
         <table class="table table-striped">
             <thead>
                 <tr>
-                    <th>ID</th>
+                    <th>OT</th>
                     <th>Número de Solicitud</th>
                     <th>Fecha de Solicitud</th>
                     <th>Solicitante</th>
@@ -215,7 +215,6 @@ require_once ROOT_PATH . '/includes/header.php';
                     <th>Especialidades</th>
                     <th>Conductor</th>
                     <th>Mantenimiento</th>
-                    <th>Habilitado</th>
                 </tr>
             </thead>
             <tbody>
@@ -237,7 +236,6 @@ require_once ROOT_PATH . '/includes/header.php';
                         echo "</td>";
                         echo "<td>" . htmlspecialchars($row["conductor_nombre"]) . "</td>";
                         echo "<td>" . htmlspecialchars($row["mantenimiento_nombre"]) . "</td>";
-                        echo "<td>" . ($row["habilitado"] ? "Sí" : "No") . "</td>";
                         echo "</tr>";
                     }
                 } else {

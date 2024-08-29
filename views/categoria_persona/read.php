@@ -1,20 +1,13 @@
 <?php
-session_start();
-    $projectRoot = dirname(__FILE__, 3);
-    require_once dirname(__DIR__, 2) . '/config/config.php';
-    require_once ROOT_PATH . '/includes/auth.php';
-    require_once $projectRoot . '/includes/functions.php';
+$projectRoot = dirname(__FILE__, 3); 
+require_once dirname(__DIR__, 2) . '/config/config.php'; 
+require_once ROOT_PATH . '/sec/init.php';
+require_once ROOT_PATH . '/includes/session.php';   
+require_once ROOT_PATH . '/sec/auth_check.php';       
+require_once $projectRoot . '/includes/functions.php'; 
 
     $categorias = getAllCategoriasPersona();
     requireLogin();
-
-    $userPermissions = getUserPermissions();
-    
-    //$requiredPermission = 'leer';
-    //if (!checkPermission('personal', $requiredPermission)) {
-    //    header("Location: " . BASE_URL . "/views/dashboard.php?error=permission_denied");
-    //    exit();
-    //}
     include ROOT_PATH . '/includes/header.php';
 
 ?>
@@ -42,7 +35,6 @@ session_start();
                     <th>ID</th>
                     <th>Nombre</th>
                     <th>Descripción</th>
-                    <th>Habilitado</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
@@ -52,7 +44,6 @@ session_start();
                         <td><?php echo $categoria['id']; ?></td>
                         <td><?php echo $categoria['nombre_categoria']; ?></td>
                         <td><?php echo $categoria['descripcion_categoria']; ?></td>
-                        <td><?php echo $categoria['habilitado'] ? 'Sí' : 'No'; ?></td>
                         <td>
                             <?php //if ($_SESSION['user_permissions']['actualizar']): ?>
                             <a href="update.php?id=<?php echo $categoria['id']; ?>" class="btn btn-warning btn-sm">Actualizar</a>

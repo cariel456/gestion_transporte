@@ -1,25 +1,24 @@
 <?php
-session_start();
-require_once dirname(__DIR__, 2) . '/config/config.php';
-require_once ROOT_PATH . '/includes/auth.php';
-require_once ROOT_PATH . '/includes/functions.php';
+$projectRoot = dirname(__FILE__, 3); 
+require_once dirname(__DIR__, 2) . '/config/config.php'; 
+require_once ROOT_PATH . '/sec/init.php';
+require_once ROOT_PATH . '/includes/session.php';   
+require_once ROOT_PATH . '/sec/auth_check.php';       
+require_once $projectRoot . '/includes/functions.php'; 
 
 requireLogin();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $data = [
-        'nombre_pais' => $_POST['nombre'],
-        'descripcion_pais' => $_POST['descripcion']
-    ];
+    $nombre = $_POST['nombre'];
+    $descripcion = $_POST['descripcion'];
     
-    if (createServicios($data)) {
+    if (createServicios(['nombre' => $nombre, 'descripcion' => $descripcion])) {
         header("Location: read.php");
         exit();
     } else {
         $error = "Error al crear";
     }
 }
-
 include ROOT_PATH . '/includes/header.php';
 ?>
 
@@ -39,12 +38,12 @@ include ROOT_PATH . '/includes/header.php';
         <?php endif; ?>
         <form method="POST">
             <div class="mb-3">
-                <label for="nombre_pais" class="form-label">Nombre del Servicio</label>
-                <input type="text" class="form-control" id="nombre_pais" name="nombre" required>
+                <label for="nombre" class="form-label">Nombre del Servicio</label>
+                <input type="text" class="form-control" id="nombre" name="nombre" required>
             </div>
             <div class="mb-3">
-                <label for="descripcion_pais" class="form-label">Descripción</label>
-                <textarea class="form-control" id="descripcion_pais" name="descripcion" rows="3"></textarea>
+                <label for="descripcion" class="form-label">Descripción</label>
+                <textarea class="form-control" id="descripcion" name="descripcion" rows="3"></textarea>
             </div>
             <button type="submit" class="btn btn-primary">Crear</button>
             <a href="read.php" class="btn btn-secondary">Cancelar</a>

@@ -3,7 +3,6 @@ $projectRoot = dirname(__FILE__, 2);
 require_once $projectRoot . '/config/db_config.php';
 
 //------------------------------------------------------------------------------------------------------------------SERVICIOS
-// Funciones CRUD para países
 function getAllServicios() {
     global $conn;
     $sql = "SELECT * FROM servicios";
@@ -14,7 +13,6 @@ function getAllServicios() {
     }
     return $paises;
 }
-
 function getServiciosById($id) {
     global $conn;
     $sql = "SELECT * FROM servicios WHERE id = ?";
@@ -24,15 +22,13 @@ function getServiciosById($id) {
     $result = $stmt->get_result();
     return $result->fetch_assoc();
 }
-
 function createServicios($data) {
     global $conn;
     $sql = "INSERT INTO servicios (nombre, descripcion) VALUES (?, ?)";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ss", $data['nombre_pais'], $data['descripcion_pais']);
+    $stmt->bind_param("ss", $data['nombre'], $data['descripcion']);
     return $stmt->execute();
 }
-
 function updateServicios($data) {
     global $conn;
     $sql = "UPDATE servicios SET nombre = ?, descripcion = ? WHERE id = ?";
@@ -40,7 +36,6 @@ function updateServicios($data) {
     $stmt->bind_param("ssi",  $data['nombre'], $data['descripcion'], $data['id']);
     return $stmt->execute();
 }
-
 function deleteServicios($id) {
     global $conn;
     $sql = "DELETE FROM servicios WHERE id = ?";
@@ -49,7 +44,7 @@ function deleteServicios($id) {
     return $stmt->execute();
 }
 
-//SECCION ESPECIALIDADES 
+//------------------------------------------------------------------------------------------------------SECCION ESPECIALIDADES 
 function createEspecialidad($nombre, $descripcion) {
     global $conn;
     $sql = "INSERT INTO especialidades_talleres (nombre_especialidad, descripcion_especialidad) VALUES (?, ?)";
@@ -86,7 +81,7 @@ function deleteEspecialidad($id) {
     return $stmt->execute();
 }
 
-//CATEGORIA PERSONAS
+//-----------------------------------------------------------------------------------------------------------CATEGORIA PERSONAS
 function createCategoriaPersona($nombre, $descripcion) {
     global $conn;
     $sql = "INSERT INTO categoria_persona (nombre_categoria, descripcion_categoria) VALUES (?, ?)";
@@ -118,6 +113,59 @@ function updateCategoriaPersona($id, $nombre, $descripcion) {
 function deleteCategoriaPersona($id) {
     global $conn;
     $sql = "DELETE FROM categoria_persona WHERE id = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $id);
+    return $stmt->execute();
+}
+
+//---------------------------------------------------------------------------------------------Funciones CRUD para terminales
+function getAllTerminales() {
+    global $conn;
+    $sql = "SELECT t.*, l.nombre_localidad FROM terminales t 
+            LEFT JOIN localidades l ON t.localidad = l.id";
+    $result = $conn->query($sql);
+    $terminales = array();
+    while ($row = $result->fetch_assoc()) {
+        $terminales[$row['id']] = $row;
+    }
+    return $terminales;
+}
+
+function getTerminalById($id) {
+    global $conn;
+    $sql = "SELECT t.*, l.nombre_localidad FROM terminales t 
+            LEFT JOIN localidades l ON t.localidad = l.id 
+            WHERE t.id = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    return $result->fetch_assoc();
+}
+
+function createTerminal($data) {
+    global $conn;
+    $sql = "INSERT INTO terminales (nombre_terminal, descripcion_terminal, localidad, telefono, telefono2, correo, correo2, web) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("ssisssss", $data['nombre_terminal'], $data['descripcion_terminal'], $data['localidad'], 
+                      $data['telefono'], $data['telefono2'], $data['correo'], $data['correo2'], $data['web']);
+    return $stmt->execute();
+}
+
+function updateTerminal($data) {
+    global $conn;
+    $sql = "UPDATE terminales SET nombre_terminal = ?, descripcion_terminal = ?, localidad = ?, 
+            telefono = ?, telefono2 = ?, correo = ?, correo2 = ?, web = ? WHERE id = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("ssisssssi", $data['nombre_terminal'], $data['descripcion_terminal'], $data['localidad'], 
+                      $data['telefono'], $data['telefono2'], $data['correo'], $data['correo2'], $data['web'], $data['id']);
+    return $stmt->execute();
+}
+
+function deleteTerminal($id) {
+    global $conn;
+    $sql = "DELETE FROM terminales WHERE id = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("i", $id);
     return $stmt->execute();
@@ -343,7 +391,6 @@ function createUnidad($codigo_interno, $descripcion, $numero_unidad) {
     $stmt->bind_param("ssii", $codigo_interno, $descripcion, $habilitado, $numero_unidad);
     return $stmt->execute();
 }
-
 function getUnidadById($id) {
     global $conn;
     $sql = "SELECT * FROM unidades WHERE id = ?";
@@ -359,7 +406,6 @@ function updateUnidad($id, $codigo_interno, $descripcion, $numero_unidad) {
     $stmt->bind_param("ssii", $codigo_interno, $descripcion, $numero_unidad, $id);
     return $stmt->execute();
 }
-
 function deleteUnidad($id) {
     global $conn;
     $sql = "DELETE FROM unidades WHERE id = ?";
@@ -367,7 +413,13 @@ function deleteUnidad($id) {
     $stmt->bind_param("i", $id);
     return $stmt->execute();
 }
-
+function searchUnidadesByCodigo($codigo) {
+    global $conn;
+    $sql = "SELECT * FROM unidades WHERE codigo_interno LIKE :codigo";
+    $stmt = $conn->prepare($sql);
+    $stmt->execute(['codigo' => "%$codigo%"]);
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
 
 //------------------------------------------------------------------------------------------------------USUARIOS 
 function getUserByUsername($username) {
@@ -462,13 +514,7 @@ function insertHorarioInterurbanoDetalle($id_horario, $hora1, $hora2) {
     $stmt->bind_param("iss", $id_horario, $hora1, $hora2);
     return $stmt->execute();
 }
-// Obtener todas las terminales
-function getAllTerminales() {
-    global $conn;
-    $sql = "SELECT * FROM terminales";
-    $result = $conn->query($sql);
-    return $result->fetch_all(MYSQLI_ASSOC);
-}
+
 function createHorariosInterurbanos($data) {
     global $conn;
     $sql = "INSERT INTO horarios_interurbanos (linea_id, terminal_salida, terminal_llegada, hora_salida, hora_llegada) VALUES (?, ?, ?, ?, ?)";
@@ -614,7 +660,7 @@ function getPersonalById($id) {
     return $stmt->get_result()->fetch_assoc();
 }
 
-function updatePersonal($id, $codigo, $categoria, $nombre_personal, $legajo, $tarjeta, $vencimiento_licencia, $habilitado) {
+function updatePersonal($id, $codigo, $categoria, $nombre_personal, $legajo, $tarjeta, $vencimiento_licencia) {
     global $conn;
     $sql = "UPDATE personal SET codigo = ?, categoria = ?, nombre_personal = ?, legajo = ?, tarjeta = ?, vencimiento_licencia = ?, habilitado = ? WHERE id = ?";
     $stmt = $conn->prepare($sql);
@@ -796,7 +842,7 @@ function deleteRolVentana($id) {
 
 function getAllNivelesUrgencias() {
     global $conn;
-    $sql = "SELECT id, nombre_urgencia FROM niveles_urgencias";
+    $sql = "SELECT * FROM niveles_urgencias";
     $result = $conn->query($sql);
     return $result->fetch_all(MYSQLI_ASSOC);
 }
@@ -843,7 +889,6 @@ function getAllPaises() {
     }
     return $paises;
 }
-
 function getPaisById($id) {
     global $conn;
     $sql = "SELECT * FROM paises WHERE id = ?";
@@ -853,7 +898,6 @@ function getPaisById($id) {
     $result = $stmt->get_result();
     return $result->fetch_assoc();
 }
-
 function createPais($data) {
     global $conn;
     $sql = "INSERT INTO paises (nombre_pais, descripcion_pais) VALUES (?, ?)";
@@ -861,7 +905,6 @@ function createPais($data) {
     $stmt->bind_param("ss", $data['nombre_pais'], $data['descripcion_pais']);
     return $stmt->execute();
 }
-
 function updatePais($data) {
     global $conn;
     $sql = "UPDATE paises SET nombre_pais = ?, descripcion_pais = ? WHERE id = ?";
@@ -869,7 +912,6 @@ function updatePais($data) {
     $stmt->bind_param("ssi",  $data['nombre_pais'], $data['descripcion_pais'], $data['id']);
     return $stmt->execute();
 }
-
 function deletePais($id) {
     global $conn;
     $sql = "DELETE FROM paises WHERE id = ?";
@@ -879,7 +921,6 @@ function deletePais($id) {
 }
 
 // Funciones CRUD para provincias
-
 function getAllProvincias() {
     global $conn;
     $sql = "SELECT * FROM provincias";
@@ -890,7 +931,6 @@ function getAllProvincias() {
     }
     return $provincias;
 }
-
 function getProvinciaById($id) {
     global $conn;
     $sql = "SELECT * FROM provincias WHERE id = ?";
@@ -900,7 +940,6 @@ function getProvinciaById($id) {
     $result = $stmt->get_result();
     return $result->fetch_assoc();
 }
-
 function createProvincia($data) {
     global $conn;
     $sql = "INSERT INTO provincias (nombre_provincia, descripcion_provincia, pais) VALUES (?, ?, ?)";
@@ -908,7 +947,6 @@ function createProvincia($data) {
     $stmt->bind_param("ssi", $data['nombre_provincia'],$data['descripcion_provincia'], $data['pais'],);
     return $stmt->execute();
 }
-
 function updateProvincia($data) {
     global $conn;
     $sql = "UPDATE provincias SET nombre_provincia = ?, descripcion_provincia = ?, pais = ? WHERE id = ?";
@@ -916,7 +954,6 @@ function updateProvincia($data) {
     $stmt->bind_param("ssii",  $data['nombre_provincia'], $data['descripcion_provincia'],$data['pais'], $data['id']);
     return $stmt->execute();
 }
-
 function deleteProvincia($id) {
     global $conn;
     $sql = "DELETE FROM provincias WHERE id = ?";
@@ -926,7 +963,6 @@ function deleteProvincia($id) {
 }
 
 // Funciones CRUD para localidades
-
 function getLocalidadById($id) {
     global $conn;
     $sql = "SELECT * FROM localidades WHERE id = ?";
@@ -936,23 +972,20 @@ function getLocalidadById($id) {
     $result = $stmt->get_result();
     return $result->fetch_assoc();
 }
-
 function createLocalidad($data) {
     global $conn;
     $sql = "INSERT INTO localidades (nombre_localidad, descripcion_localidad, provincia) VALUES (?, ?, ?)";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ssii",  $data['nombre_localidad'], $data['descripcion_localidad'],$data['provincia'], $data['id']);
+    $stmt->bind_param("ssi",  $data['nombre_localidad'], $data['descripcion_localidad'],$data['provincia']);
     return $stmt->execute();
 }
-
-function updateLocalidad($id, $nombre_localidad, $descripcion_localidad, $provincia) {
+function updateLocalidad($data) {
     global $conn;
     $sql = "UPDATE localidades SET nombre_localidad = ?, descripcion_localidad = ?, provincia = ? WHERE id = ?";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ssii", $nombre_localidad, $descripcion_localidad, $provincia, $id);
+    $stmt->bind_param("ssii",  $data['nombre_localidad'], $data['descripcion_localidad'],$data['provincia'], $data['id']);
     return $stmt->execute();
 }
-
 function deleteLocalidad($id) {
     global $conn;
     $sql = "DELETE FROM localidades WHERE id = ?";
@@ -962,7 +995,6 @@ function deleteLocalidad($id) {
 }
 
 // Funciones CRUD para niveles de urgencia
-
 function getNivelUrgenciaById($id) {
     global $conn;
     $sql = "SELECT * FROM niveles_urgencias WHERE id = ?";
@@ -972,23 +1004,20 @@ function getNivelUrgenciaById($id) {
     $result = $stmt->get_result();
     return $result->fetch_assoc();
 }
-
-function createNivelUrgencia($nombre_urgencia, $descripcion_urgencia) {
+function createNivelUrgencia($data) {
     global $conn;
-    $sql = "INSERT INTO niveles_urgencias (nombre_urgencia, descripcion_urgencia) VALUES (?, ?)";
+    $sql = "INSERT INTO niveles_urgencias (nombre_urgencia, descripcion_urgencias) VALUES (?, ?)";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ss", $nombre_urgencia, $descripcion_urgencia);
+    $stmt->bind_param("ss",$data['nombre_urgencia'], $data['descripcion_urgencias']);
     return $stmt->execute();
 }
-
-function updateNivelUrgencia($id, $nombre_urgencia, $descripcion_urgencia) {
+function updateNivelUrgencia($data) {
     global $conn;
-    $sql = "UPDATE niveles_urgencias SET nombre_urgencia = ?, descripcion_urgencia = ? WHERE id = ?";
+    $sql = "UPDATE niveles_urgencias SET nombre_urgencia = ?, descripcion_urgencias = ? WHERE id = ?";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ssi", $nombre_urgencia, $descripcion_urgencia, $id);
+    $stmt->bind_param("ssi",$data['nombre_urgencia'], $data['descripcion_urgencias'], $data['id']);
     return $stmt->execute();
 }
-
 function deleteNivelUrgencia($id) {
     global $conn;
     $sql = "DELETE FROM niveles_urgencias WHERE id = ?";
@@ -996,7 +1025,6 @@ function deleteNivelUrgencia($id) {
     $stmt->bind_param("i", $id);
     return $stmt->execute();
 }
-
 
 // Crear un nuevo viaje abierto
 function createViajeAbierto($chofer1, $chofer2, $unidad, $estado_viaje_abierto, $turno_registro_sistema, $turno_registro_planilla, $chofer_actual, $observaciones) {
@@ -1198,7 +1226,7 @@ function getAllParejas() {
     return $result->fetch_all(MYSQLI_ASSOC);
 }
 
-//----------------------------------------------------------------------------------------TURNOS
+//------------------------------------------------------------------------------------------------------------TURNOS
 function getAllTurnos() {
     global $conn;
     $sql = "SELECT * FROM turnos";
@@ -1235,10 +1263,8 @@ function deleteTurnos($id) {
     return $stmt->execute();
 }
 
-
-
 //--------------------------------------------------------------------------------------------------DISTRIBUCION DE TURNOS
-function getTurnosDistribucionById(){
+function getTurnosDistribucionById($id){
     global $conn;
     $sql = "SELECT * FROM turnos_distribucion WHERE id = ?";
     $stmt = $conn->prepare($sql);

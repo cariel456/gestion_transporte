@@ -1,6 +1,10 @@
 <?php
-$projectRoot = dirname(__FILE__, 3);
-require_once $projectRoot . '/includes/functions.php';
+$projectRoot = dirname(__FILE__, 3); 
+require_once dirname(__DIR__, 2) . '/config/config.php'; 
+require_once ROOT_PATH . '/sec/init.php';
+require_once ROOT_PATH . '/includes/session.php';   
+require_once ROOT_PATH . '/sec/auth_check.php';       
+require_once $projectRoot . '/includes/functions.php'; 
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id = $_POST['id'];
@@ -26,6 +30,7 @@ if (!$especialidad) {
     header("Location: read.php");
     exit();
 }
+include ROOT_PATH . '/includes/header.php';
 ?>
 
 <!DOCTYPE html>
@@ -53,6 +58,7 @@ if (!$especialidad) {
                 <textarea class="form-control" id="descripcion_especialidad" name="descripcion_especialidad" rows="3"><?php echo $especialidad['descripcion_especialidad']; ?></textarea>
             </div>
             <button type="submit" class="btn btn-primary">Actualizar</button>
+            <a href="read.php" class="btn btn-secondary">Cancelar</a>
         </form>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
