@@ -6,10 +6,11 @@ require_once ROOT_PATH . '/includes/session.php';
 require_once ROOT_PATH . '/sec/auth_check.php';       
 require_once $projectRoot . '/includes/functions.php'; 
 
-    $categorias = getAllCategoriasPersona();
-    requireLogin();
-    include ROOT_PATH . '/includes/header.php';
+requireLogin();
 
+$categorias = getAllCategoriasPersona();
+
+include ROOT_PATH . '/includes/header.php';
 ?>
 
 <!DOCTYPE html>

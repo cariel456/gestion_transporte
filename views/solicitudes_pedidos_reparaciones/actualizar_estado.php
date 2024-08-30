@@ -41,7 +41,7 @@ include ROOT_PATH . '/includes/header.php';
             <label for="nuevo_estado">Nuevo Estado</label>
             <select class="form-control" id="nuevo_estado" name="nuevo_estado" style="margin-bottom: 15px; margin-top: 15px" required>
                 <?php foreach ($estados as $estado): ?>
-                    <option value="<?php echo $estado['id']; ?>"><?php echo $estado['nombre_estado']; ?></option>
+                    <option value="<?php echo $estado['id']; ?>"><?php echo $estado['nombre']; ?></option>
                 <?php endforeach; ?>
             </select>
         </div>

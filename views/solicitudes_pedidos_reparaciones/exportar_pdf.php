@@ -96,7 +96,7 @@ class PDF extends FPDF
 {
     function Header()
     {
-        $this->Image('../../extras/lgh.jpg', 13, 13, 25);
+        $this->Image('../../extras/lgh.jpg', 8, 2, 25);
         $this->SetFont('Arial','B',15);
         $this->Cell(0,10,'Solicitudes de Pedidos y Reparaciones',0,1,'C');
         $this->Ln(5);

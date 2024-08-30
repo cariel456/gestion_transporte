@@ -1,15 +1,13 @@
 <?php
-session_start();
-require_once dirname(__DIR__, 2) . '/config/config.php';
-require_once ROOT_PATH . '/includes/auth.php';
-require_once ROOT_PATH . '/includes/functions.php';
+$projectRoot = dirname(__FILE__, 3); 
+require_once dirname(__DIR__, 2) . '/config/config.php'; 
+require_once ROOT_PATH . '/sec/init.php';
+require_once ROOT_PATH . '/includes/session.php';   
+require_once ROOT_PATH . '/sec/auth_check.php';       
+require_once $projectRoot . '/includes/functions.php'; 
 
 requireLogin();
-
-if (!checkPermission('localidades', 'leer')) {
-    //header("Location: " . BASE_URL . "/views/dashboard.php?error=permission_denied");
-    //exit();
-}
+requireLogin();
 
 $localidades = getAllLocalidades();
 $provincias = getAllProvincias();

@@ -5,6 +5,7 @@ require_once ROOT_PATH . '/sec/init.php';
 require_once ROOT_PATH . '/includes/session.php';   
 require_once ROOT_PATH . '/sec/auth_check.php';       
 require_once $projectRoot . '/includes/functions.php'; 
+requireLogin();
 
 $especialidades = getAllEspecialidades();
 include ROOT_PATH . '/includes/header.php';
@@ -22,7 +23,7 @@ include ROOT_PATH . '/includes/header.php';
     <div class="container mt-5">
         <h1>Especialidades Taller</h1>
         <a href="create.php" class="btn btn-primary mb-3">Crear Nueva Especialidad</a>
-        <a href="../dashboard.php" class="btn btn-secondary mb-3">Volver</a>
+        <a href="../../index.php" class="btn btn-secondary mb-3">Volver</a>
         <table class="table table-striped">
             <thead>
                 <tr>

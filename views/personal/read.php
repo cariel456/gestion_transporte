@@ -5,6 +5,7 @@ require_once ROOT_PATH . '/sec/init.php';
 require_once ROOT_PATH . '/includes/session.php';   
 require_once ROOT_PATH . '/sec/auth_check.php';       
 require_once $projectRoot . '/includes/functions.php'; 
+requireLogin();
 
 // Modificar la función getAllPersonal para aceptar un parámetro de búsqueda
 function getAllPersonaless($busqueda = '') {

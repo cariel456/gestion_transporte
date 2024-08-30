@@ -1,8 +1,10 @@
 <?php
-session_start();
-require_once dirname(__DIR__, 2) . '/config/config.php';
-require_once ROOT_PATH . '/includes/auth.php';
-require_once ROOT_PATH . '/includes/functions.php';
+$projectRoot = dirname(__FILE__, 3); 
+require_once dirname(__DIR__, 2) . '/config/config.php'; 
+require_once ROOT_PATH . '/sec/init.php';
+require_once ROOT_PATH . '/includes/session.php';   
+require_once ROOT_PATH . '/sec/auth_check.php';       
+require_once $projectRoot . '/includes/functions.php'; 
 
 requireLogin();
 
@@ -23,7 +25,7 @@ include ROOT_PATH . '/includes/header.php';
     <div class="container mt-5">
         <h1>Niveles de Urgencia</h1>
         <a href="create.php" class="btn btn-success mb-3">Crear Nivel de Urgencia</a>
-        <a href="../dashboard.php" class="btn btn-secondary mb-3">Cancelar</a>
+        <a href="../../index.php" class="btn btn-secondary mb-3">Cancelar</a>
         <table class="table table-striped">
             <thead>
                 <tr>

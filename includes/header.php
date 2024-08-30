@@ -1,6 +1,8 @@
 <?php
 require_once dirname(__DIR__) . '/config/config.php';
+require_once ROOT_PATH . '/sec/init.php';
 require_once __DIR__ . '/session.php'; 
+require_once ROOT_PATH . '/sec/auth_check.php';       
 requireLogin();
 $userPermissions = $_SESSION['user_permissions'];
 ?>
@@ -107,7 +109,7 @@ $userPermissions = $_SESSION['user_permissions'];
                         <li><a class="dropdown-item" href="<?php echo BASE_URL; ?>/views/provincias/read.php">Provincias</a></li>
                         <li><a class="dropdown-item" href="<?php echo BASE_URL; ?>/views/localidades/read.php">Localidades</a></li>
                         <li><a class="dropdown-item" href="<?php echo BASE_URL; ?>/views/niveles_urgencias/read.php">Niveles de Urgencia</a></li>
-                        <li><a class="dropdown-item" href="<?php echo BASE_URL; ?>/views/grupos_funciones/read.php">Grupos de Funciones</a></li>
+
                         <li><a class="dropdown-item" href="<?php echo BASE_URL; ?>/views/especialidades_taller/read.php">Especialidades de Taller</a></li>
                         <li><a class="dropdown-item" href="<?php echo BASE_URL; ?>/views/servicios/read.php">Servicios</a></li>
                         <li><a class="dropdown-item" href="<?php echo BASE_URL; ?>/views/terminales/read.php">Terminales</a></li>
@@ -128,10 +130,11 @@ $userPermissions = $_SESSION['user_permissions'];
                     </ul>
                 </li>
                 <?php //endif; ?>
+
             <!--CERRAR SESION-->
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link" href="<?php echo BASE_URL; ?>/includes/logout.php">Cerrar sesión</a>
+                    <a class="nav-link" href="<?php echo BASE_URL; ?>/includes/logout.php">Cerrar Sesión</a>
                 </li>
             </ul>
         </div>

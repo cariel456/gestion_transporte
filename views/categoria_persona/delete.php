@@ -6,6 +6,8 @@ require_once ROOT_PATH . '/includes/session.php';
 require_once ROOT_PATH . '/sec/auth_check.php';       
 require_once $projectRoot . '/includes/functions.php'; 
 
+requireLogin();
+
 $id = $_GET['id'] ?? null;
 if (!$id) {
     header("Location: read.php");

@@ -6,6 +6,8 @@ require_once ROOT_PATH . '/includes/session.php';
 require_once ROOT_PATH . '/sec/auth_check.php';       
 require_once $projectRoot . '/includes/functions.php'; 
 
+requireLogin();
+
 $horarios = getAllHorariosInterurbanos();  
 
 include ROOT_PATH . '/includes/header.php'; 
@@ -24,7 +26,10 @@ include ROOT_PATH . '/includes/header.php';
         <h1>Horarios Interurbanos</h1>         
         <?php if (isset($_SESSION['message'])): ?>             
             <div class="alert alert-success"><?php echo $_SESSION['message']; unset($_SESSION['message']); ?></div>         
-        <?php endif; ?>         
+        <?php endif; ?>    
+        <a href="create.php" class="btn btn-primary">Crear Nuevo Horario Interurbano</a>
+        <a href="exportar_pdf.php" class="btn btn-success" target="_blank">Exportar Todos a PDF</a>
+        <a href="<?php echo BASE_URL; ?>/includes/header.php" class="btn btn-secondary">Cancelar</a>     
         <table class="table table-striped">             
             <thead>                 
                 <tr>                     
@@ -53,8 +58,6 @@ include ROOT_PATH . '/includes/header.php';
                 <?php endforeach; ?>             
             </tbody>         
         </table>         
-        <a href="create.php" class="btn btn-primary">Crear Nuevo Horario Interurbano</a>
-        <a href="exportar_pdf.php" class="btn btn-success" target="_blank">Exportar Todos a PDF</a>
     </div>      
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script> 
 </body> 

@@ -38,7 +38,7 @@ include ROOT_PATH . '/includes/header.php';
                 <?php //if (checkPermission('unidades', 'crear')): ?>
                     <a href="create.php" class="btn btn-success">Crear Unidad</a>
                 <?php //endif; ?>
-                <a href="../dashboard.php" class="btn btn-secondary">Volver</a>
+                <a href="<?php echo BASE_URL; ?>/includes/header.php" class="btn btn-secondary">Volver</a>
             </div>
             <div class="col-md-6">
                 <form action="" method="GET" class="d-flex">

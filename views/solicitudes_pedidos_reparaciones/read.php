@@ -36,7 +36,7 @@ include ROOT_PATH . '/includes/header.php';
             <a href="create.php" class="btn btn-success mb-3">Crear Solicitud</a>
         <?php //endif; ?>
 
-        <a href="/../includes/header.php" class="btn btn-secondary mb-3">Volver</a>
+        <a href="<?php echo BASE_URL; ?>/includes/header.php" class="btn btn-secondary mb-3">Volver</a>
     <table class="table table-striped">
         <thead>
             <tr>

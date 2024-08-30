@@ -1,9 +1,10 @@
 <?php
-session_start(); 
 $projectRoot = dirname(__FILE__, 3); 
 require_once dirname(__DIR__, 2) . '/config/config.php'; 
+require_once ROOT_PATH . '/sec/init.php';
+require_once ROOT_PATH . '/includes/session.php';   
+require_once ROOT_PATH . '/sec/auth_check.php';       
 require_once $projectRoot . '/includes/functions.php'; 
-require_once ROOT_PATH . '/sec/auth_check.php';
 
 // Obtener los servicios y terminales para los dropdowns
 $servicios = getAllServicios();
@@ -121,6 +122,7 @@ include ROOT_PATH . '/includes/header.php';
             
             <div>
                 <button type="submit" class="btn btn-primary">Guardar Horario Interurbano</button>
+                <a href="read.php" class="btn btn-secondary">Cancelar</a>
             </div>
         </form>
     </div>
