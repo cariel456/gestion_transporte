@@ -34,30 +34,6 @@ include ROOT_PATH . '/includes/header.php';
 <body>
     <div class="container mt-5">
         <h1>Lista de Distribuciones de Turnos</h1>
-        
-        <!-- Formulario de búsqueda -->
-        <form method="POST" class="mb-4">
-            <div class="row">
-                <div class="col-md-3">
-                    <input type="text" name="nombre" class="form-control" placeholder="Nombre">
-                </div>
-                <div class="col-md-3">
-                    <input type="text" name="descripcion" class="form-control" placeholder="Descripción">
-                </div>
-                <div class="col-md-3">
-                    <select name="tipo_servicio" class="form-control">
-                        <option value="">Todos los tipos de servicio</option>
-                        <?php foreach (getTurnosTiposServicios() as $tipo): ?>
-                            <option value="<?php echo $tipo['id']; ?>"><?php echo $tipo['nombre']; ?></option>
-                        <?php endforeach; ?>
-                    </select>
-                </div>
-                <div class="col-md-3">
-                    <button type="submit" class="btn btn-primary">Buscar</button>
-                </div>
-            </div>
-        </form>
-
         <table class="table table-striped">
             <thead>
                 <tr>
@@ -80,6 +56,7 @@ include ROOT_PATH . '/includes/header.php';
                             <a href="update.php?id=<?php echo $distribucion['id']; ?>" class="btn btn-warning btn-sm">Editar</a>
                             <a href="delete.php?id=<?php echo $distribucion['id']; ?>" class="btn btn-danger btn-sm" onclick="return confirm('¿Estás seguro de que quieres eliminar esta distribución?')">Eliminar</a>
                             <a href="exportar_pdf.php?id=<?php echo $distribucion['id']; ?>" class="btn btn-info btn-sm" target="_blank">Exportar a PDF</a>
+                            <a href="exportar_pdf.php?id=<?php echo $distribucion['id']; ?>" class="btn btn-secondary btn-sm" target="_blank">CONSULTAS</a>
                         </td>
                     </tr>
                 <?php endforeach; ?>

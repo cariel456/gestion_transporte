@@ -44,7 +44,7 @@ function deleteServicios($id) {
     return $stmt->execute();
 }
 
-//------------------------------------------------------------------------------------------------------SECCION ESPECIALIDADES 
+//----------------------------------------------------------------------------------------------------SECCION ESPECIALIDADES 
 function createEspecialidad($nombre, $descripcion) {
     global $conn;
     $sql = "INSERT INTO especialidades_talleres (nombre_especialidad, descripcion_especialidad) VALUES (?, ?)";
@@ -81,7 +81,7 @@ function deleteEspecialidad($id) {
     return $stmt->execute();
 }
 
-//-----------------------------------------------------------------------------------------------------------CATEGORIA PERSONAS
+//---------------------------------------------------------------------------------------------------------CATEGORIA PERSONAS
 function createCategoriaPersona($nombre, $descripcion) {
     global $conn;
     $sql = "INSERT INTO categoria_persona (nombre_categoria, descripcion_categoria) VALUES (?, ?)";
@@ -509,7 +509,7 @@ function insertHorarioInterurbano($servicio1, $servicio2, $servicio3, $terminal_
 }
 function insertHorarioInterurbanoDetalle($id_horario, $hora1, $hora2) {
     global $conn;
-    $sql = "INSERT INTO horarios_interurbanos_detalle (id_horarios_interurbanos, hora1, hora2) VALUES (?, ?, ?)";
+    $sql = "INSERT INTO horarios_interurbanos_detalle (id_horario_interurbano, hora1, hora2) VALUES (?, ?, ?)";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("iss", $id_horario, $hora1, $hora2);
     return $stmt->execute();
@@ -586,9 +586,9 @@ function getHorarioDetalles($id_horario) {
 }
 function updateHorarioInterurbano($id, $servicio1, $servicio2, $servicio3, $terminal_salida, $terminal_llegada, $descripcion) {
     global $conn;
-    $sql = "UPDATE horarios_interurbanos SET servicio1 = ?, servicio2 = ?, servicio3 = ?, terminal_salida = ?, terminal_llegada = ?, descripcion = ?, updated = CURRENT_TIMESTAMP WHERE id = ?";
+    $sql = "UPDATE horarios_interurbanos SET servicio1 = ?, servicio2 = ?, servicio3 = ?, terminal_salida = ?, terminal_llegada = ?, descripcion = ? WHERE id = ?";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("iiiiiis", $servicio1, $servicio2, $servicio3, $terminal_salida, $terminal_llegada, $id, $descripcion);
+    $stmt->bind_param("iiiiiis", $servicio1, $servicio2, $servicio3, $terminal_salida, $terminal_llegada, $descripcion, $id);
     return $stmt->execute();
 }
 
@@ -624,11 +624,11 @@ function updateHorarioInterurbanoDetalle($id, $hora1, $hora2) {
     return $stmt->execute();
 }
 
-function deleteHorarioInterurbanoDetalle($id) {
+function deleteHorarioInterurbanoDetalles($id_horario) {
     global $conn;
-    $sql = "DELETE FROM horarios_interurbanos_detalle WHERE id = ?";
+    $sql = "DELETE FROM horarios_interurbanos_detalle WHERE id_horario_interurbano = ?";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("i", $id);
+    $stmt->bind_param("i", $id_horario);
     return $stmt->execute();
 }
 
@@ -1281,22 +1281,28 @@ function getTurnosDistribucionDetallesById($id){
     $stmt->execute();
     return $stmt->get_result()->fetch_assoc();
 }
-// Función para crear una nueva distribución de turnos
 function createTurnosDistribucion($nombre, $descripcion, $tipo_servicio) {
     global $conn;
     $sql = "INSERT INTO turnos_distribucion (nombre, descripcion, tipo_servicio) VALUES (?, ?, ?)";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("ssi", $nombre, $descripcion, $tipo_servicio);
-    return $stmt->execute();
+    if ($stmt->execute()) {
+        return $conn->insert_id; // Retorna el ID de la nueva distribución
+    }
+    return false;
 }
 // Función para crear los detalles de la distribución de turnos
 function createTurnosDistribucionDetalles($id_distribucion, $turnos, $turnos_servicios, $personal, $fechas) {
     global $conn;
     $sql = "INSERT INTO turnos_distribucion_detalle (id_turnos_distribucion, turno, turnos_servicios, personal, fecha) VALUES (?, ?, ?, ?, ?)";
     $stmt = $conn->prepare($sql);
+    
     foreach ($turnos as $i => $turno) {
         $stmt->bind_param("iiiis", $id_distribucion, $turnos[$i], $turnos_servicios[$i], $personal[$i], $fechas[$i]);
-        $stmt->execute();
+        if (!$stmt->execute()) {
+            // Si hay un error, devolver false
+            return false;
+        }
     }
     return true;
 }
@@ -1368,7 +1374,6 @@ function deleteTurnosDistribucionDetalles($id_distribucion) {
     $stmt->bind_param("i", $id_distribucion);
     return $stmt->execute();
 }
-
 // Función para eliminar el registro maestro de la distribución de turnos
 function deleteTurnosDistribucion($id) {
     global $conn;
@@ -1385,7 +1390,6 @@ function updateTurnosDistribucion($id, $nombre, $descripcion, $tipo_servicio) {
     $stmt->bind_param("ssii", $nombre, $descripcion, $tipo_servicio, $id);
     return $stmt->execute();
 }
-
 // Función para actualizar los detalles de la distribución de turnos
 function updateTurnosDistribucionDetalles($id_distribucion, $turnos, $turnos_servicios, $personal, $fechas) {
     global $conn;
@@ -1401,8 +1405,14 @@ function updateTurnosDistribucionDetalles($id_distribucion, $turnos, $turnos_ser
     }
     return true;
 }
-
-
+function getHorarioInterurbanoDetalles($id_horario) {
+    global $conn;
+    $sql = "SELECT * FROM horarios_interurbanos_detalle WHERE id_horario_interurbano = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $id_horario);
+    $stmt->execute();
+    return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+}
 
 function searchTurnosDistribucion($nombre = '', $descripcion = '', $tipo_servicio = 0)
 {
@@ -1441,4 +1451,3 @@ function searchTurnosDistribucion($nombre = '', $descripcion = '', $tipo_servici
     $stmt->execute();
     return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
 }
-

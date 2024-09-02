@@ -44,6 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = "Error al crear la distribución de turnos.";
     }
 }
+include ROOT_PATH . '/includes/header.php';
 ?>
 
 <!DOCTYPE html>
