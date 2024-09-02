@@ -51,12 +51,12 @@ $userPermissions = $_SESSION['user_permissions'];
                             TALLER
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <?php if (checkPermission('taller', 'subitems', 'pedidos_taller')): ?>
+                            <?php //if (checkPermission('taller', 'subitems', 'pedidos_taller')): ?>
                                 <li><a class="dropdown-item" href="<?php echo BASE_URL; ?>/views/solicitudes_pedidos_reparaciones/read.php">Pedidos Taller</a></li>
-                            <?php endif; ?>
-                            <?php if (checkPermission('taller', 'subitems', 'consultas')): ?>
+                            <?php //endif; ?>
+                            <?php //if (checkPermission('taller', 'subitems', 'consultas')): ?>
                                 <li><a class="dropdown-item" href="<?php echo BASE_URL; ?>/views/solicitudes_pedidos_reparaciones/consultas.php">Consultas</a></li>
-                            <?php endif; ?>
+                            <?php //endif; ?>
                         </ul>
                     </li>
                 <?php //endif; ?>

@@ -1,9 +1,10 @@
 <?php
-session_start();
-$projectRoot = dirname(__FILE__, 3);
-require_once dirname(__DIR__, 2) . '/config/config.php';
-require_once ROOT_PATH . '/includes/auth.php';
-require_once $projectRoot . '/includes/functions.php';
+$projectRoot = dirname(__FILE__, 3); 
+require_once dirname(__DIR__, 2) . '/config/config.php'; 
+require_once ROOT_PATH . '/sec/init.php';
+require_once ROOT_PATH . '/includes/session.php';   
+require_once ROOT_PATH . '/sec/auth_check.php';       
+require_once $projectRoot . '/includes/functions.php'; 
 require_once ROOT_PATH . '/lib/fpdf.php';
 
 // Verificar si el usuario está autenticado
@@ -24,7 +25,7 @@ class PDF extends FPDF
         $this->SetFont('Arial','B',15);
         $this->Cell(80);
         $this->Cell(30,10,utf8_decode('Distribución de Turnos'),0,0,'C');
-        $this->Ln(30); // Aumentamos el espacio entre el logo y el contenido
+        $this->Ln(30);
     }
 
     function Footer()
@@ -44,7 +45,13 @@ function generatePDF($id) {
     $pdf->AddPage();
     $pdf->SetFont('Arial','B',12);
 
-    // ... (código anterior sin cambios)
+    // Información de la tabla maestra
+    $pdf->Cell(0,10,utf8_decode('Información de la Distribución'),0,1);
+    $pdf->SetFont('Arial','',10);
+    $pdf->Cell(0,6,utf8_decode('Nombre: '.$distribucion['nombre']),0,1);
+    $pdf->Cell(0,6,utf8_decode('Fecha: '.$distribucion['fecha']),0,1);
+    $pdf->Cell(0,6,utf8_decode('Descripción: '.$distribucion['descripcion']),0,1);
+    $pdf->Cell(0,6,utf8_decode('Tipo de Servicio: '.$distribucion['tipo_servicio']),0,1);
 
     $pdf->Ln(10);
     $pdf->SetFont('Arial','B',12);
@@ -66,21 +73,23 @@ function generatePDF($id) {
         $currentY = $startY;
 
         // Turno
-        $pdf->Cell($w[0],6,utf8_decode(getTurnosById($detalle['turno'])['nombre']),1,0,'L');
+        $turnoInfo = getTurnosById($detalle['turno']);
+        $pdf->Cell($w[0],6,utf8_decode($turnoInfo['nombre']),1,0,'L');
         
-        // Servicio (con texto multilínea)
-        $servicio = utf8_decode(getTurnosServiciosById($detalle['turnos_servicios'])['nombre']);
-        $pdf->MultiCell($w[1],6,$servicio,1,'L');
+        // Servicio
+        $servicioInfo = getTurnosServiciosById($detalle['turnos_servicios']);
+        $pdf->MultiCell($w[1],6,utf8_decode($servicioInfo['nombre']),1,'L');
         $currentY = max($currentY, $pdf->GetY());
         
         // Volvemos a la posición correcta para las siguientes celdas
         $pdf->SetXY($pdf->GetX() + $w[0] + $w[1], $startY);
 
         // Personal
-        $pdf->Cell($w[2],6,utf8_decode(getPersonalById($detalle['personal'])['nombre_personal']),1,0,'L');
+        $personalInfo = getPersonalById($detalle['personal']);
+        $pdf->Cell($w[2],6,utf8_decode($personalInfo['nombre_personal']),1,0,'L');
         
-        // Fecha
-        $pdf->Cell($w[3],6,$detalle['fecha'],1,0,'C');
+        // Fecha (usando la fecha de la tabla maestra)
+        $pdf->Cell($w[3],6,$distribucion['fecha'],1,0,'C');
         
         // Ajustamos la posición Y para la siguiente fila
         $pdf->SetY($currentY);

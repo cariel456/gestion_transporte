@@ -37,7 +37,8 @@ include ROOT_PATH . '/includes/header.php';
                     <th>Servicio 2</th>                     
                     <th>Servicio 3</th>                     
                     <th>Terminal Salida</th>                     
-                    <th>Terminal Llegada</th>                     
+                    <th>Terminal Llegada</th>
+                    <th>Descripcion</th>                     
                     <th>Acciones</th>                 
                 </tr>             
             </thead>             
@@ -48,7 +49,8 @@ include ROOT_PATH . '/includes/header.php';
                     <td><?php echo $horario['servicio2_nombre']; ?></td>                     
                     <td><?php echo $horario['servicio3_nombre']; ?></td>                     
                     <td><?php echo $horario['terminal_salida_nombre']; ?></td>                     
-                    <td><?php echo $horario['terminal_llegada_nombre']; ?></td>                     
+                    <td><?php echo $horario['terminal_llegada_nombre']; ?></td>
+                    <td><?php echo $horario['descripcion']; ?></td>                      
                     <td>                         
                         <a href="view_horario.php?id=<?php echo $horario['id']; ?>" class="btn btn-info btn-sm">Ver</a>                         
                         <a href="delete_horario.php?id=<?php echo $horario['id']; ?>" class="btn btn-danger btn-sm" onclick="return confirm('¿Está seguro de que desea eliminar este horario?')">Eliminar</a>

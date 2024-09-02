@@ -17,9 +17,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $servicio3 = $_POST['servicio3'];
     $terminal_salida = $_POST['terminal_salida'];
     $terminal_llegada = $_POST['terminal_llegada'];
+    $descripcion = $_POST['descripcion'];
     
     // Insertar en la tabla maestro
-    $id_horario = insertHorarioInterurbano($servicio1, $servicio2, $servicio3, $terminal_salida, $terminal_llegada);
+    $id_horario = insertHorarioInterurbano($servicio1, $servicio2, $servicio3, $terminal_salida, $terminal_llegada, $descripcion);
     
     if ($id_horario) {
         // Insertar detalles
@@ -100,7 +101,12 @@ include ROOT_PATH . '/includes/header.php';
                     <?php endforeach; ?>
                 </select>
             </div>
-            
+            <div class="mb-3">
+                <label for="descripcion" class="form-label">Descripcion</label>
+                <input type="text" class="form-control" id="descripcion" name="descripcion" required>
+            </div>
+
+
             <h2>Detalles de Horarios</h2>
             <table class="table" id="detalles-table">
                 <thead>

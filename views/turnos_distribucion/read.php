@@ -1,11 +1,11 @@
 <?php
-session_start();
-$projectRoot = dirname(__FILE__, 3);
-require_once dirname(__DIR__, 2) . '/config/config.php';
-require_once ROOT_PATH . '/includes/auth.php';
-require_once $projectRoot . '/includes/functions.php';
+$projectRoot = dirname(__FILE__, 3); 
+require_once dirname(__DIR__, 2) . '/config/config.php'; 
+require_once ROOT_PATH . '/sec/init.php';
+require_once ROOT_PATH . '/includes/session.php';   
+require_once ROOT_PATH . '/sec/auth_check.php';       
+require_once $projectRoot . '/includes/functions.php'; 
 
-// Verificar si el usuario está autenticado
 requireLogin();
 
 // Obtener la lista de distribuciones de turnos
@@ -77,7 +77,7 @@ include ROOT_PATH . '/includes/header.php';
                         <td><?php echo getTurnosTipoServicioById($distribucion['tipo_servicio'])['nombre']; ?></td>
                         <td>
                             <a href="view.php?id=<?php echo $distribucion['id']; ?>" class="btn btn-primary btn-sm">Ver</a>
-                            <a href="edit.php?id=<?php echo $distribucion['id']; ?>" class="btn btn-warning btn-sm">Editar</a>
+                            <a href="update.php?id=<?php echo $distribucion['id']; ?>" class="btn btn-warning btn-sm">Editar</a>
                             <a href="delete.php?id=<?php echo $distribucion['id']; ?>" class="btn btn-danger btn-sm" onclick="return confirm('¿Estás seguro de que quieres eliminar esta distribución?')">Eliminar</a>
                             <a href="exportar_pdf.php?id=<?php echo $distribucion['id']; ?>" class="btn btn-info btn-sm" target="_blank">Exportar a PDF</a>
                         </td>
