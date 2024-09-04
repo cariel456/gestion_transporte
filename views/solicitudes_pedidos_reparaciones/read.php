@@ -6,10 +6,8 @@ require_once ROOT_PATH . '/includes/session.php';
 require_once ROOT_PATH . '/sec/auth_check.php';       
 require_once $projectRoot . '/includes/functions.php'; 
 
-// Actualizar la última actividad
-$_SESSION['last_activity'] = time();
-
 requireLogin();
+$_SESSION['last_activity'] = time();
 
 $solicitudes = getAllSolicitudesPedidosReparaciones();
 $niveles_urgencias = getAllNivelesUrgencias();
@@ -17,7 +15,7 @@ $grupos_funciones = getAllGruposFunciones();
 $especialidades = getAllEspecialidadesTalleres();
 
 include ROOT_PATH . '/includes/header.php';
-
+$rol_id = $_SESSION['rol_id'];
 ?>
 
 <!DOCTYPE html>
@@ -32,11 +30,14 @@ include ROOT_PATH . '/includes/header.php';
     <div class="container mt-5">
         <h1>Solicitudes de pedidos de reparaciones</h1>
 
-        <?php //if (isset($_SESSION['user_permissions']['crear']) && $_SESSION['user_permissions']['crear']): ?>
+        <?php if ($rol_id == 1): ?>
             <a href="create.php" class="btn btn-success mb-3">Crear Solicitud</a>
-        <?php //endif; ?>
-
+        <?php //endif?>
+        <?php elseif ($rol_id == 2): ?>
+            <a href="create.php" class="btn btn-success mb-3">Crear Solicitud</a>
+        <?php endif; ?>
         <a href="<?php echo BASE_URL; ?>/includes/header.php" class="btn btn-secondary mb-3">Volver</a>
+        
     <table class="table table-striped">
         <thead>
             <tr>
@@ -79,15 +80,17 @@ include ROOT_PATH . '/includes/header.php';
                 $estado_actual = getEstadoActual($solicitud['id']);
                 echo $estado_actual['nombre'];
                 ?>
+                <?php if ($rol_id == 1):?>
                 <a href="actualizar_estado.php?id=<?php echo $solicitud['id']; ?>" class="btn btn-info btn-sm">Actualizar Estado</a>
+                <?php endif;?>
             </td>
-            <td>
-                    <?php //if (isset($_SESSION['user_permissions']['actualizar']) && $_SESSION['user_permissions']['actualizar']): ?>
+                <td>
+                    <?php if ($rol_id == 1):?>
                         <a href="update.php?id=<?php echo $solicitud['id']; ?>" class="btn btn-warning btn-sm">Actualizar</a>
-                    <?php //endif; ?>
-                    <?php //if (isset($_SESSION['user_permissions']['eliminar']) && $_SESSION['user_permissions']['eliminar']): ?>
+                    <?php endif;?>
+                    <?php if ($rol_id == 1): ?>
                         <a href="delete.php?id=<?php echo $solicitud['id']; ?>" class="btn btn-danger btn-sm">Eliminar</a>
-                    <?php //endif; ?>
+                    <?php endif;?>
             </td>
         </tr>
     <?php endforeach; ?>
@@ -95,6 +98,5 @@ include ROOT_PATH . '/includes/header.php';
         </table>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    
 </body>
 </html>

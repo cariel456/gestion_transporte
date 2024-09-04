@@ -18,6 +18,7 @@ if (!empty($search)) {
     $unidades = getAllUnidades();
 }
 
+$rol_id = $_SESSION['rol_id'];
 include ROOT_PATH . '/includes/header.php';
 ?>
 
@@ -35,9 +36,12 @@ include ROOT_PATH . '/includes/header.php';
 
         <div class="row mb-3">
             <div class="col-md-6">
-                <?php //if (checkPermission('unidades', 'crear')): ?>
-                    <a href="create.php" class="btn btn-success">Crear Unidad</a>
-                <?php //endif; ?>
+            <?php if ($rol_id == 1): ?>
+                <a href="create.php" class="btn btn-success mb-3">Crear Unidad</a>
+            <?php //endif?>
+            <?php elseif ($rol_id == 2): ?>
+                <a href="create.php" class="btn btn-success mb-3">Crear Unidad</a>
+            <?php endif; ?>
                 <a href="<?php echo BASE_URL; ?>/includes/header.php" class="btn btn-secondary">Volver</a>
             </div>
             <div class="col-md-6">
@@ -69,12 +73,12 @@ include ROOT_PATH . '/includes/header.php';
                             <td><?php echo htmlspecialchars($unidad['numero_unidad']); ?></td>
                             <td><?php echo $unidad['habilitado'] ? 'Sí' : 'No'; ?></td>
                             <td>
-                                <?php //if (checkPermission('unidades', 'actualizar')): ?>
-                                    <a href="update.php?id=<?php echo $unidad['id']; ?>" class="btn btn-warning btn-sm">Actualizar</a>
-                                <?php //endif; ?>
-                                <?php //if (checkPermission('unidades', 'eliminar')): ?>
-                                    <a href="delete.php?id=<?php echo $unidad['id']; ?>" class="btn btn-danger btn-sm">Eliminar</a>
-                                <?php //endif; ?>
+                            <?php if ($rol_id == 1):?>
+                                <a href="update.php?id=<?php echo $solicitud['id']; ?>" class="btn btn-warning btn-sm">Actualizar</a>
+                            <?php endif;?>
+                            <?php if ($rol_id == 1): ?>
+                                <a href="delete.php?id=<?php echo $solicitud['id']; ?>" class="btn btn-danger btn-sm">Eliminar</a>
+                            <?php endif;?>
                             </td>
                         </tr>
                     <?php endforeach; ?>

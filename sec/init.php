@@ -15,7 +15,7 @@ try {
     if (isset($_SESSION['last_activity']) && (time() - $_SESSION['last_activity'] > $session_timeout)) {
         session_unset();
         session_destroy();
-        redirect("views/login.php");
+        redirect("index.php/../..");
     }
 
     // Actualizar la última actividad

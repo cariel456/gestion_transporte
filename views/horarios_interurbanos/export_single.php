@@ -54,6 +54,8 @@ $pdf->Cell(60, 10, 'Terminal Salida:', 0);
 $pdf->Cell(0, 10, utf8_decode($horario['terminal_salida_nombre']), 0, 1);
 $pdf->Cell(60, 10, 'Terminal Llegada:', 0);
 $pdf->Cell(0, 10, utf8_decode($horario['terminal_llegada_nombre']), 0, 1);
+$pdf->Cell(60, 10, 'Descripcion:', 0);
+$pdf->Cell(0, 10, utf8_decode($horario['descripcion']), 0, 1);
 
 $pdf->Ln(10);
 $pdf->SetFont('Arial', 'B', 12);

@@ -4,7 +4,6 @@ require_once ROOT_PATH . '/sec/init.php';
 require_once __DIR__ . '/session.php'; 
 require_once ROOT_PATH . '/sec/auth_check.php';       
 requireLogin();
-$userPermissions = $_SESSION['user_permissions'];
 ?>
 
 <!DOCTYPE html>
@@ -118,19 +117,7 @@ $userPermissions = $_SESSION['user_permissions'];
                 </li>
                 <?php //endif; ?>    
             </div>
-            
-             <!--SEGURIDAD-->
-             <?php //if (checkPermission('unidades', 'leer')): ?>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownConfig" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        SEC
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownConfig">
-                        <li><a class="dropdown-item" href="<?php echo BASE_URL; ?>/views/usuarios/read.php">Usuarios</a></li>
-                    </ul>
-                </li>
-                <?php //endif; ?>
-
+        
             <!--CERRAR SESION-->
             <ul class="navbar-nav">
                 <li class="nav-item">

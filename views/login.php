@@ -14,15 +14,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($user && password_verify($password, $user['password'])) {
         $_SESSION['user_id'] = $user['id'];
         $_SESSION['username'] = $user['nombre_usuario'];
-        $userPermissions = getUserPermissions($user['id']);
 
-        if (!empty($userPermissions)) {
-            $_SESSION['user_permissions'] = $userPermissions;
+
+        function getUserRoleId($userId) {
+            global $conn; // Asumiendo que tienes una conexión global a la base de datos
+            $query = "SELECT rol_id FROM usuarios WHERE id = ?";
+            $stmt = $conn->prepare($query);
+            $stmt->bind_param("i", $userId);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $row = $result->fetch_assoc();
+            return $row['rol_id'];
+        }
+
+         // Obtener el rol_id del usuario
+         $rol_id = getUserRoleId($user['id']);
+         $_SESSION['rol_id'] = $rol_id; // Guardar en una variable de sesión
+        
+        //$userPermissions = getUserPermissions($user['id']);
+        //if (!empty($userPermissions)) {
+        //    $_SESSION['user_permissions'] = $userPermissions;
             header("Location: " . BASE_URL . "/includes/header.php");
             exit();
-        } else {
-            $error = "No se encontraron permisos para este usuario";
-        }
+        //} else {
+        //    $error = "No se encontraron permisos para este usuario";
+        //}
     } else {
         $error = "Usuario o contraseña incorrectos";
     }
@@ -80,7 +96,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                     <div class="d-grid gap-2">
                         <button type="submit" class="btn btn-primary btn-lg">Ingresar</button>
-                        <a href="registro.php" class="btn btn-secondary btn-lg">Registrar usuario</a>
+                <!--<a href="registro.php" class="btn btn-secondary btn-lg">Registrar usuario</a>-->
                     </div>
                 </form>
             </div>

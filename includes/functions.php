@@ -509,7 +509,7 @@ function insertHorarioInterurbano($servicio1, $servicio2, $servicio3, $terminal_
 }
 function insertHorarioInterurbanoDetalle($id_horario, $hora1, $hora2) {
     global $conn;
-    $sql = "INSERT INTO horarios_interurbanos_detalle (id_horario_interurbano, hora1, hora2) VALUES (?, ?, ?)";
+    $sql = "INSERT INTO horarios_interurbanos_detalle (id_horarios_interurbanos, hora1, hora2) VALUES (?, ?, ?)";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("iss", $id_horario, $hora1, $hora2);
     return $stmt->execute();
@@ -626,7 +626,7 @@ function updateHorarioInterurbanoDetalle($id, $hora1, $hora2) {
 
 function deleteHorarioInterurbanoDetalles($id_horario) {
     global $conn;
-    $sql = "DELETE FROM horarios_interurbanos_detalle WHERE id_horario_interurbano = ?";
+    $sql = "DELETE FROM horarios_interurbanos_detalle WHERE id_horarios_interurbanos = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("i", $id_horario);
     return $stmt->execute();
@@ -1414,40 +1414,59 @@ function getHorarioInterurbanoDetalles($id_horario) {
     return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
 }
 
-function searchTurnosDistribucion($nombre = '', $descripcion = '', $tipo_servicio = 0)
+function searchTurnosDistribucion($nombre = '', $descripcion = '', $tipo_servicio = 0, $fecha_inicio = '', $fecha_fin = '', $personal = '')
 {
     global $conn;
-    $sql = "SELECT * FROM turnos_distribucion WHERE 1=1";
+    $sql = "SELECT DISTINCT td.* FROM turnos_distribucion td
+            LEFT JOIN turnos_distribucion_detalle tdd ON td.id = tdd.id_turno_distribucion
+            WHERE 1=1";
+
+    $params = array();
+    $types = "";
 
     if (!empty($nombre)) {
-        $sql .= " AND nombre LIKE ?";
+        $sql .= " AND td.nombre LIKE ?";
+        $params[] = "%$nombre%";
+        $types .= "s";
     }
 
     if (!empty($descripcion)) {
-        $sql .= " AND descripcion LIKE ?";
+        $sql .= " AND td.descripcion LIKE ?";
+        $params[] = "%$descripcion%";
+        $types .= "s";
     }
 
     if ($tipo_servicio > 0) {
-        $sql .= " AND tipo_servicio = ?";
+        $sql .= " AND td.tipo_servicio = ?";
+        $params[] = $tipo_servicio;
+        $types .= "i";
+    }
+
+    if (!empty($fecha_inicio)) {
+        $sql .= " AND tdd.fecha >= ?";
+        $params[] = $fecha_inicio;
+        $types .= "s";
+    }
+
+    if (!empty($fecha_fin)) {
+        $sql .= " AND tdd.fecha <= ?";
+        $params[] = $fecha_fin;
+        $types .= "s";
+    }
+
+    if (!empty($personal)) {
+        $sql .= " AND tdd.id_personal = ?";
+        $params[] = $personal;
+        $types .= "i";
     }
 
     $stmt = $conn->prepare($sql);
-    $params = array();
-    $i = 1;
 
-    if (!empty($nombre)) {
-        $params[] = "%$nombre%";
+    if (!empty($params)) {
+        $stmt->bind_param($types, ...$params);
     }
 
-    if (!empty($descripcion)) {
-        $params[] = "%$descripcion%";
-    }
-
-    if ($tipo_servicio > 0) {
-        $params[] = $tipo_servicio;
-    }
-
-    $stmt->bind_param(str_repeat("s", count($params)), ...$params);
     $stmt->execute();
-    return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+    $result = $stmt->get_result();
+    return $result->fetch_all(MYSQLI_ASSOC);
 }
