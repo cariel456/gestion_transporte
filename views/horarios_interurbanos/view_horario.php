@@ -155,8 +155,9 @@ include ROOT_PATH . '/includes/header.php';
             </div>
             <div class="mb-3">
                 <label for="descripcion" class="form-label">Descripción</label>
-                <input type="text" class="form-control" id="descripcion" name="descripcion" value="<?php echo htmlspecialchars($horario['descripcion']); ?>" required>
+                <input type="text" class="form-control" id="descripcion" name="descripcion" value="<?php echo htmlspecialchars($horario['descripcion']); ?>">
             </div>
+            
             <button type="submit" class="btn btn-primary">
                 <i class="fas fa-save me-2"></i>Actualizar Horario
             </button>

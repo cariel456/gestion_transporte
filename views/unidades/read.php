@@ -44,12 +44,12 @@ include ROOT_PATH . '/includes/header.php';
             <?php endif; ?>
                 <a href="<?php echo BASE_URL; ?>/includes/header.php" class="btn btn-secondary">Volver</a>
             </div>
-            <div class="col-md-6">
+            <!--<div class="col-md-6">
                 <form action="" method="GET" class="d-flex">
                     <input type="text" name="search" class="form-control me-2" placeholder="Buscar por código interno" value="<?php echo htmlspecialchars($search); ?>">
                     <button type="submit" class="btn btn-primary">Buscar</button>
                 </form>
-            </div>
+            </div>-->
         </div>
 
         <?php if (empty($unidades)): ?>

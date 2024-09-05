@@ -16,6 +16,7 @@ include ROOT_PATH . '/includes/header.php';
 
 <!DOCTYPE html> 
 <html lang="es"> 
+    
 <head>     
     <meta charset="UTF-8">     
     <meta name="viewport" content="width=device-width, initial-scale=1.0">     
@@ -23,6 +24,7 @@ include ROOT_PATH . '/includes/header.php';
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 </head> 
+
 <body class="bg-light">     
     <div class="container mt-5">         
         <h1 class="mb-4">Horarios Interurbanos</h1>         

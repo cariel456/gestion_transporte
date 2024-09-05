@@ -41,23 +41,3 @@ function checkPermission($item, $accion, $subitem = null) {
     
     return isset($permissions[$item][$accion]) && $permissions[$item][$accion] == 1;
 }
-
-function getUserPermissions($user_id) {
-    global $conn;
-    
-    $sql = "SELECT ru.permisos
-            FROM usuarios u
-            JOIN roles_usuarios ru ON u.rol_id = ru.id
-            WHERE u.id = ? AND u.habilitado = 1 AND ru.habilitado = 1";
-    
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("i", $user_id);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    
-    if ($row = $result->fetch_assoc()) {
-        return json_decode($row['permisos'], true);
-    }
-    
-    return [];
-}
