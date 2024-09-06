@@ -14,6 +14,7 @@ function hasPermission($section, $action = null) {
     }
     return isset($permissions[$section]);
 }
+
 ?>
 
 <!DOCTYPE html>

@@ -5,6 +5,7 @@ require_once ROOT_PATH . '/includes/session.php';
 require_once ROOT_PATH . '/sec/auth_check.php';    
 require_once ROOT_PATH . '/includes/functions.php';
 
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = $_POST['username'];
     $password = $_POST['password'];

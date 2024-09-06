@@ -9,7 +9,7 @@ require_once $projectRoot . '/includes/functions.php';
 requireLogin();
 
 $categorias = getAllCategoriasPersona();
-
+$rol_id = $_SESSION['rol_id'];
 include ROOT_PATH . '/includes/header.php';
 ?>
 
@@ -25,10 +25,17 @@ include ROOT_PATH . '/includes/header.php';
     <div class="container mt-5">
 
     <h1>Ingresar nueva categoria</h1>
-        <?php //if ($_SESSION['user_permissions']['crear']): ?>
-        <a href="create.php" class="btn btn-success mb-3">Crear</a>
-        <?php //endif; ?>
-        <a href="../../index.php" class="btn btn-secondary mb-3">Volver</a>
+    <div class="row mb-3">
+            <div class="col-md-6">
+            <?php if ($rol_id == 1): ?>
+                <a href="create.php" class="btn btn-success mb-3">Crear Categoria Personal</a>
+            <?php //endif?>
+            <?php elseif ($rol_id == 2): ?>
+                <a href="create.php" class="btn btn-success mb-3">Crear Categoria Personal</a>
+            <?php endif; ?>
+                <a href="<?php echo BASE_URL; ?>/includes/header.php" class="btn btn-secondary">Volver</a>
+            </div>
+        </div>
 
         <table class="table table-striped">
             <thead>
@@ -46,13 +53,13 @@ include ROOT_PATH . '/includes/header.php';
                         <td><?php echo $categoria['nombre_categoria']; ?></td>
                         <td><?php echo $categoria['descripcion_categoria']; ?></td>
                         <td>
-                            <?php //if ($_SESSION['user_permissions']['actualizar']): ?>
-                            <a href="update.php?id=<?php echo $categoria['id']; ?>" class="btn btn-warning btn-sm">Actualizar</a>
-                            <?php //endif; ?>
-                            <?php //if ($_SESSION['user_permissions']['eliminar']): ?>
-                            <a href="delete.php?id=<?php echo $categoria['id']; ?>" class="btn btn-danger btn-sm">Eliminar</a>
-                            <?php //endif; ?>
-                        </td>
+                            <?php if ($rol_id == 1):?>
+                                <a href="update.php?id=<?php echo $solicitud['id']; ?>" class="btn btn-warning btn-sm">Actualizar</a>
+                            <?php endif;?>
+                            <?php if ($rol_id == 1): ?>
+                                <a href="delete.php?id=<?php echo $solicitud['id']; ?>" class="btn btn-danger btn-sm">Eliminar</a>
+                            <?php endif;?>
+                            </td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>

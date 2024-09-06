@@ -25,14 +25,22 @@ $busqueda = isset($_GET['busqueda']) ? $_GET['busqueda'] : '';
 // Obtener los resultados filtrados
 $personal = getAllPersonaless($busqueda);
 $categoriaPersonal = getAllCategoriasPersona();
+$rol_id = $_SESSION['rol_id'];
 
 include '../../includes/header.php';
 ?>
 
 <div class="container mt-5">
     <h1>Lista de Personal</h1>
-    <a href="create.php" class="btn btn-primary mb-3">Agregar Personal</a>
-    <a href="../../index.php" class="btn btn-secondary mb-3">Volver</a>
+    <div class="col-md-6">
+            <?php if ($rol_id == 1): ?>
+                <a href="create.php" class="btn btn-success mb-3">Agregar Personal</a>
+            <?php //endif?>
+            <?php elseif ($rol_id == 2): ?>
+                <a href="create.php" class="btn btn-success mb-3">Agregar Personal</a>
+            <?php endif; ?>
+                <a href="<?php echo BASE_URL; ?>/includes/header.php" class="btn btn-secondary">Volver</a>
+    </div>
     
     <!-- Formulario de búsqueda -->
     <form action="" method="GET" class="mb-3">
@@ -67,11 +75,14 @@ include '../../includes/header.php';
                     <td><?php echo isset($persona['legajo']) ? htmlspecialchars($persona['legajo']) : ''; ?></td>
                     <td><?php echo isset($persona['tarjeta']) ? htmlspecialchars($persona['tarjeta']) : ''; ?></td>
                     <td><?php echo isset($persona['vencimiento_licencia']) ? htmlspecialchars($persona['vencimiento_licencia']) : ''; ?></td>
-                    
                     <td>
-                        <a href="update.php?id=<?php echo isset($persona['id']) ? $persona['id'] : ''; ?>" class="btn btn-sm btn-warning">Editar</a>
-                        <a href="delete.php?id=<?php echo isset($persona['id']) ? $persona['id'] : ''; ?>" class="btn btn-sm btn-danger" onclick="return confirm('¿Está seguro de que desea eliminar este registro?')">Eliminar</a>
-                    </td>
+                            <?php if ($rol_id == 1):?>
+                                <a href="update.php?id=<?php echo $solicitud['id']; ?>" class="btn btn-warning btn-sm">Actualizar</a>
+                            <?php endif;?>
+                            <?php if ($rol_id == 1): ?>
+                                <a href="delete.php?id=<?php echo $solicitud['id']; ?>" class="btn btn-danger btn-sm">Eliminar</a>
+                            <?php endif;?>
+                            </td>
                 </tr>
             <?php endforeach; ?>
         </tbody>
