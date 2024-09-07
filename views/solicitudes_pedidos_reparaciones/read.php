@@ -30,12 +30,10 @@ $rol_id = $_SESSION['rol_id'];
     <div class="container mt-5">
         <h1>Solicitudes de pedidos de reparaciones</h1>
 
-        <?php if ($rol_id == 1): ?>
-            <a href="create.php" class="btn btn-success mb-3">Crear Solicitud</a>
-        <?php //endif?>
-        <?php elseif ($rol_id == 2): ?>
-            <a href="create.php" class="btn btn-success mb-3">Crear Solicitud</a>
+        <?php if (in_array('escritura', $_SESSION['permissions']) || in_array('total', $_SESSION['permissions'])): ?>
+                <a href="create.php" class="btn btn-primary">Crear Nuevo</a>
         <?php endif; ?>
+
         <a href="<?php echo BASE_URL; ?>/includes/header.php" class="btn btn-secondary mb-3">Volver</a>
         
     <table class="table table-striped">
@@ -80,17 +78,17 @@ $rol_id = $_SESSION['rol_id'];
                 $estado_actual = getEstadoActual($solicitud['id']);
                 echo $estado_actual['nombre'];
                 ?>
-                <?php if ($rol_id == 1):?>
-                <a href="actualizar_estado.php?id=<?php echo $solicitud['id']; ?>" class="btn btn-info btn-sm">Actualizar Estado</a>
-                <?php endif;?>
+                  <?php if (in_array('modificar', $_SESSION['permissions']) || in_array('total', $_SESSION['permissions'])): ?>
+                    <a href="actualizar_estado.php?id=<?php echo $solicitud['id']; ?>" class="btn btn-info btn-sm">Actualizar Estado</a>
+                 <?php endif; ?>
             </td>
-                <td>
-                    <?php if ($rol_id == 1):?>
-                        <a href="update.php?id=<?php echo $solicitud['id']; ?>" class="btn btn-warning btn-sm">Actualizar</a>
-                    <?php endif;?>
-                    <?php if ($rol_id == 1): ?>
-                        <a href="delete.php?id=<?php echo $solicitud['id']; ?>" class="btn btn-danger btn-sm">Eliminar</a>
-                    <?php endif;?>
+            <td>
+            <?php if (in_array('modificar', $_SESSION['permissions']) || in_array('total', $_SESSION['permissions'])): ?>
+                                <a href="update.php?id=<?php echo $solicitud['id']; ?>" class="btn btn-warning btn-sm">Actualizar</a>
+                            <?php endif; ?>
+                            <?php if (in_array('eliminar', $_SESSION['permissions']) || in_array('total', $_SESSION['permissions'])): ?>
+                                <a href="delete.php?id=<?php echo $solicitud['id']; ?>" class="btn btn-danger btn-sm">Eliminar</a>
+                            <?php endif; ?>
             </td>
         </tr>
     <?php endforeach; ?>

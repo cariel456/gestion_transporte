@@ -113,8 +113,10 @@ include ROOT_PATH . '/includes/header.php';
                         <td>
                             <div class="btn-group" role="group">
                                 <a href="view.php?id=<?php echo $distribucion['id']; ?>" class="btn btn-primary btn-sm">Ver</a>
-                                <a href="update.php?id=<?php echo $distribucion['id']; ?>" class="btn btn-warning btn-sm">Editar</a>
-                                <a href="delete.php?id=<?php echo $distribucion['id']; ?>" class="btn btn-danger btn-sm" onclick="return confirm('¿Estás seguro de que quieres eliminar esta distribución?')">Eliminar</a>
+                                <?php if (in_array('escritura', $_SESSION['permissions']) || in_array('total', $_SESSION['permissions'])): ?>
+                                    <a href="update.php?id=<?php echo $item['id']; ?>" class="btn btn-warning btn-sm">Actualizar</a>
+                                    <a href="delete.php?id=<?php echo $item['id']; ?>" class="btn btn-danger btn-sm">Eliminar</a>
+                                 <?php endif; ?>
                                 <a href="exportar_pdf.php?id=<?php echo $distribucion['id']; ?>" class="btn btn-info btn-sm" target="_blank">Exportar a PDF</a>
                                 <a href="consultas.php?id=<?php echo $distribucion['id']; ?>" class="btn btn-secondary btn-sm">Consultas</a>
                             </div>
@@ -124,7 +126,9 @@ include ROOT_PATH . '/includes/header.php';
             </tbody>
         </table>
         
-        <a href="create.php" class="btn btn-success">Crear Nueva Distribución de Turnos</a>
+        <?php if (in_array('escritura', $_SESSION['permissions']) || in_array('total', $_SESSION['permissions'])): ?>
+            <a href="create.php" class="btn btn-primary">Crear Nuevo</a>
+        <?php endif; ?>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>

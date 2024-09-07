@@ -9,7 +9,6 @@ require_once $projectRoot . '/includes/functions.php';
 requireLogin();
 
 $horarios = getAllHorariosInterurbanos();  
-$rol_id = $_SESSION['rol_id'];
 
 include ROOT_PATH . '/includes/header.php'; 
 ?>  
@@ -36,11 +35,9 @@ include ROOT_PATH . '/includes/header.php';
         <?php endif; ?>
         
         <div class="mb-4">
-        <?php if ($rol_id == 1): ?>
-            <a href="create.php" class="btn btn-primary">
-                <i class="fas fa-plus-circle me-2"></i>Crear Nuevo Horario
-            </a>
-        <?php endif?>
+        <?php if (in_array('escritura', $_SESSION['permissions']) || in_array('total', $_SESSION['permissions'])): ?>
+            <a href="create.php" class="btn btn-primary">Crear Nuevo</a>
+        <?php endif; ?>
             <a href="exportar_pdf.php" class="btn btn-success" target="_blank">
                 <i class="fas fa-file-pdf me-2"></i>Exportar Todos a PDF
             </a>
@@ -73,14 +70,12 @@ include ROOT_PATH . '/includes/header.php';
                         <td><?php echo $horario['descripcion']; ?></td>                      
                         <td>                         
                             <div class="btn-group" role="group" aria-label="Acciones de horario">
-                                <?php if ($rol_id == 1): ?>
-                                    <a href="view_horario.php?id=<?php echo $horario['id']; ?>" class="btn btn-outline-primary btn-sm">
-                                    <i class="fas fa-eye"></i>
-                                </a><?php endif; ?>  
-                                <?php if ($rol_id == 1): ?>                       
-                                <a href="delete_horario.php?id=<?php echo $horario['id']; ?>" class="btn btn-outline-danger btn-sm" onclick="return confirm('¿Está seguro de que desea eliminar este horario?')">
-                                    <i class="fas fa-trash-alt"></i>
-                                </a><?php endif; ?>  
+                            <?php if (in_array('modificar', $_SESSION['permissions']) || in_array('total', $_SESSION['permissions'])): ?>
+                                <a href="update.php?id=<?php echo $item['id']; ?>" class="btn btn-warning btn-sm">Actualizar</a>
+                            <?php endif; ?>
+                            <?php if (in_array('eliminar', $_SESSION['permissions']) || in_array('total', $_SESSION['permissions'])): ?>
+                                <a href="delete.php?id=<?php echo $item['id']; ?>" class="btn btn-danger btn-sm">Eliminar</a>
+                            <?php endif; ?>
                                 <a href="export_single.php?id=<?php echo $horario['id']; ?>" class="btn btn-outline-success btn-sm" target="_blank">
                                     <i class="fas fa-file-export"></i>
                                 </a>

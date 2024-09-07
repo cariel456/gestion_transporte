@@ -25,7 +25,9 @@ include ROOT_PATH . '/includes/header.php';
         <h1>Terminales</h1>
         
         <?php //if (checkPermission('terminales', 'crear')): ?>
-            <a href="create.php" class="btn btn-success mb-3">Crear Terminal</a>
+            <?php if (in_array('escritura', $_SESSION['permissions']) || in_array('total', $_SESSION['permissions'])): ?>
+                <a href="create.php" class="btn btn-primary">Crear Nuevo</a>
+        <?php endif; ?>
             <a href="../../index.php" class="btn btn-secondary mb-3">Volver</a>
         <?php //endif; ?>
         
@@ -53,12 +55,10 @@ include ROOT_PATH . '/includes/header.php';
                         <td><?php echo $terminal['correo']; ?></td>
                         <td><?php echo $terminal['web']; ?></td>
                         <td>
-                            <?php //if (checkPermission('terminales', 'actualizar')): ?>
-                                <a href="update.php?id=<?php echo $terminal['id']; ?>" class="btn btn-warning btn-sm">Actualizar</a>
-                            <?php //endif; ?>
-                            <?php //if (checkPermission('terminales', 'eliminar')): ?>
-                                <a href="delete.php?id=<?php echo $terminal['id']; ?>" class="btn btn-danger btn-sm">Eliminar</a>
-                            <?php //endif; ?>
+                        <?php if (in_array('escritura', $_SESSION['permissions']) || in_array('total', $_SESSION['permissions'])): ?>
+                                <a href="update.php?id=<?php echo $item['id']; ?>" class="btn btn-warning btn-sm">Actualizar</a>
+                                <a href="delete.php?id=<?php echo $item['id']; ?>" class="btn btn-danger btn-sm">Eliminar</a>
+                        <?php endif; ?>
                         </td>
                     </tr>
                 <?php endforeach; ?>

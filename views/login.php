@@ -15,37 +15,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($user && password_verify($password, $user['password'])) {
         $_SESSION['user_id'] = $user['id'];
         $_SESSION['username'] = $user['nombre_usuario'];
+        $_SESSION['rol_id'] = $user['rol_id'];
+        $_SESSION['permissions'] = getUserPermissions($user['id']);
 
-        function getUserRoleId($userId) {
-            global $conn; // Asumiendo que tienes una conexión global a la base de datos
-            $query = "SELECT rol_id FROM usuarios WHERE id = ?";
-            $stmt = $conn->prepare($query);
-            $stmt->bind_param("i", $userId);
-            $stmt->execute();
-            $result = $stmt->get_result();
-            $row = $result->fetch_assoc();
-            return $row['rol_id'];
-        }
-
-        function getUserPermissions($rol_id) {
-            global $conn; // Asumiendo que tienes una conexión global a la base de datos
-            $query = "SELECT permisos FROM roles_usuarios WHERE id = ?";
-            $stmt = $conn->prepare($query);
-            $stmt->bind_param("i", $rol_id);
-            $stmt->execute();
-            $result = $stmt->get_result();
-            $row = $result->fetch_assoc();
-            return $row['permisos'];
-        }
-
-        // Obtener el rol_id del usuario
-        $rol_id = getUserRoleId($user['id']);
-        $_SESSION['rol_id'] = $rol_id; // Guardar en una variable de sesión
-
-         // Obtener los permisos del usuario
-         $permissionsJson = getUserPermissions($rol_id);
-         $permissions = json_decode($permissionsJson, true);
-         $_SESSION['permissions'] = $permissions; // Guardar en una variable de sesión
 
         header("Location: " . BASE_URL . "/includes/header.php");
         exit();

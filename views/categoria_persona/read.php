@@ -27,11 +27,8 @@ include ROOT_PATH . '/includes/header.php';
     <h1>Ingresar nueva categoria</h1>
     <div class="row mb-3">
             <div class="col-md-6">
-            <?php if ($rol_id == 1): ?>
-                <a href="create.php" class="btn btn-success mb-3">Crear Categoria Personal</a>
-            <?php //endif?>
-            <?php elseif ($rol_id == 2): ?>
-                <a href="create.php" class="btn btn-success mb-3">Crear Categoria Personal</a>
+            <?php if (in_array('escritura', $_SESSION['permissions']) || in_array('total', $_SESSION['permissions'])): ?>
+                <a href="create.php" class="btn btn-primary">Crear Nuevo</a>
             <?php endif; ?>
                 <a href="<?php echo BASE_URL; ?>/includes/header.php" class="btn btn-secondary">Volver</a>
             </div>
@@ -53,13 +50,13 @@ include ROOT_PATH . '/includes/header.php';
                         <td><?php echo $categoria['nombre_categoria']; ?></td>
                         <td><?php echo $categoria['descripcion_categoria']; ?></td>
                         <td>
-                            <?php if ($rol_id == 1):?>
-                                <a href="update.php?id=<?php echo $solicitud['id']; ?>" class="btn btn-warning btn-sm">Actualizar</a>
-                            <?php endif;?>
-                            <?php if ($rol_id == 1): ?>
-                                <a href="delete.php?id=<?php echo $solicitud['id']; ?>" class="btn btn-danger btn-sm">Eliminar</a>
-                            <?php endif;?>
-                            </td>
+                            <?php if (in_array('modificar', $_SESSION['permissions']) || in_array('total', $_SESSION['permissions'])): ?>
+                                <a href="update.php?id=<?php echo $item['id']; ?>" class="btn btn-warning btn-sm">Actualizar</a>
+                            <?php endif; ?>
+                            <?php if (in_array('eliminar', $_SESSION['permissions']) || in_array('total', $_SESSION['permissions'])): ?>
+                                <a href="delete.php?id=<?php echo $item['id']; ?>" class="btn btn-danger btn-sm">Eliminar</a>
+                            <?php endif; ?>
+                        </td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>

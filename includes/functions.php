@@ -2,6 +2,73 @@
 $projectRoot = dirname(__FILE__, 2);
 require_once $projectRoot . '/config/db_config.php';
 
+
+//------------------------------------------------------------------------------------------------------USUARIOS VALIDACION
+function getUserByUsername($username) {
+    global $conn;
+    $sql = "SELECT * FROM usuarios WHERE nombre_usuario = ? AND habilitado = 1";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("s", $username);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    return $result->fetch_assoc();
+}
+function getAllUsers() {
+    global $conn;
+    $sql = "SELECT * FROM usuarios";
+    $result = $conn->query($sql);
+    return $result->fetch_all(MYSQLI_ASSOC);
+}
+function getUserById($id) {
+    global $conn;
+    $sql = "SELECT * FROM usuarios WHERE id = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $id);
+    $stmt->execute();
+    return $stmt->get_result()->fetch_assoc();
+}
+function getUserRoleId($userId) {
+    global $conn; // Asumiendo que tienes una conexión global a la base de datos
+    $query = "SELECT rol_id FROM usuarios WHERE id = ?";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param("i", $userId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $row = $result->fetch_assoc();
+    return $row['rol_id'];
+}
+
+function getUserPermissions($userId) {
+    global $conn;
+    $query = "
+    SELECT 
+        pu.nombre AS nombre_permiso
+    FROM 
+        Usuarios u
+    JOIN 
+        roles_usuarios ru ON u.rol_id = ru.id
+    JOIN 
+        roles_permisos rp ON ru.id = rp.rol_id
+    JOIN 
+        permisos_usuarios pu ON rp.permisos_id = pu.id
+    WHERE 
+        u.id = ?
+    ";
+    
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param("i", $userId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    
+    $permissions = [];
+    while ($row = $result->fetch_assoc()) {
+        $permissions[] = $row['nombre_permiso'];
+    }
+    
+    return $permissions;
+}
+
+
 //------------------------------------------------------------------------------------------------------------------SERVICIOS
 function getAllServicios() {
     global $conn;
@@ -421,62 +488,6 @@ function searchUnidadesByCodigo($codigo) {
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
-//------------------------------------------------------------------------------------------------------USUARIOS 
-function getUserByUsername($username) {
-    global $conn;
-    $sql = "SELECT * FROM usuarios WHERE nombre_usuario = ? AND habilitado = 1";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("s", $username);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    return $result->fetch_assoc();
-}
-function getAllUsers() {
-    global $conn;
-    $sql = "SELECT * FROM usuarios";
-    $result = $conn->query($sql);
-    return $result->fetch_all(MYSQLI_ASSOC);
-}
-function createUser($nombre_usuario, $descripcion_usuario, $rol_id, $password) {
-    global $conn;
-    $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-    $sql = "INSERT INTO usuarios (nombre_usuario, descripcion_usuario, rol_id, password) VALUES (?, ?, ?, ?)";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ssis", $nombre_usuario, $descripcion_usuario,  $rol_id, $hashed_password);
-    return $stmt->execute();
-}
-
-function getUserById($id) {
-    global $conn;
-    $sql = "SELECT * FROM usuarios WHERE id = ?";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("i", $id);
-    $stmt->execute();
-    return $stmt->get_result()->fetch_assoc();
-}
-
-function updateUser($id, $nombre_usuario, $descripcion_usuario, $habilitado, $rol_id, $password = null) {
-    global $conn;
-    if ($password) {
-        $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-        $sql = "UPDATE Usuarios SET nombre_usuario = ?, descripcion_usuario = ?, habilitado = ?, rol_id = ?, password = ? WHERE id = ?";
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("ssiisi", $nombre_usuario, $descripcion_usuario, $habilitado, $rol_id, $hashed_password, $id);
-    } else {
-        $sql = "UPDATE Usuarios SET nombre_usuario = ?, descripcion_usuario = ?, habilitado = ?, rol_id = ? WHERE id = ?";
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("ssiii", $nombre_usuario, $descripcion_usuario, $habilitado, $rol_id, $id);
-    }
-    return $stmt->execute();
-}
-
-function deleteUser($id) {
-    global $conn;
-    $sql = "DELETE FROM usuarios WHERE id = ?";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("i", $id);
-    return $stmt->execute();
-}
 
 //------------------------------------------------------------------------------------------HORARIOS TERMINALES INTERURBANOS
 // Crear un nuevo horario interurbano

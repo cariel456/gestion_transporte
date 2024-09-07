@@ -22,7 +22,9 @@ include ROOT_PATH . '/includes/header.php';
 <body>
     <div class="container mt-5">
         <h1>Especialidades Taller</h1>
-        <a href="create.php" class="btn btn-primary mb-3">Crear Nueva Especialidad</a>
+        <?php if (in_array('escritura', $_SESSION['permissions']) || in_array('total', $_SESSION['permissions'])): ?>
+            <a href="create.php" class="btn btn-primary">Crear Nuevo</a>
+        <?php endif; ?>
         <a href="../../index.php" class="btn btn-secondary mb-3">Volver</a>
         <table class="table table-striped">
             <thead>
@@ -42,8 +44,12 @@ include ROOT_PATH . '/includes/header.php';
                         <td><?php echo $especialidad['descripcion_especialidad']; ?></td>
                         <td><?php echo $especialidad['habilitado'] ? 'Sí' : 'No'; ?></td>
                         <td>
-                            <a href="update.php?id=<?php echo $especialidad['id']; ?>" class="btn btn-sm btn-warning">Editar</a>
-                            <a href="delete.php?id=<?php echo $especialidad['id']; ?>" class="btn btn-sm btn-danger" onclick="return confirm('¿Está seguro de que desea eliminar esta especialidad?')">Eliminar</a>
+                            <?php if (in_array('modificar', $_SESSION['permissions']) || in_array('total', $_SESSION['permissions'])): ?>
+                                <a href="update.php?id=<?php echo $item['id']; ?>" class="btn btn-warning btn-sm">Actualizar</a>
+                            <?php endif; ?>
+                            <?php if (in_array('eliminar', $_SESSION['permissions']) || in_array('total', $_SESSION['permissions'])): ?>
+                                <a href="delete.php?id=<?php echo $item['id']; ?>" class="btn btn-danger btn-sm">Eliminar</a>
+                            <?php endif; ?>
                         </td>
                     </tr>
                 <?php endforeach; ?>
