@@ -32,7 +32,7 @@ include ROOT_PATH . '/includes/header.php';
             <?php endif; ?>
                 <a href="<?php echo BASE_URL; ?>/includes/header.php" class="btn btn-secondary">Volver</a>
             </div>
-        </div>
+    </div>
 
         <table class="table table-striped">
             <thead>
@@ -51,10 +51,10 @@ include ROOT_PATH . '/includes/header.php';
                         <td><?php echo $categoria['descripcion_categoria']; ?></td>
                         <td>
                             <?php if (in_array('modificar', $_SESSION['permissions']) || in_array('total', $_SESSION['permissions'])): ?>
-                                <a href="update.php?id=<?php echo $item['id']; ?>" class="btn btn-warning btn-sm">Actualizar</a>
+                                <a href="update.php?id=<?php echo $categoria['id']; ?>" class="btn btn-warning btn-sm">Actualizar</a>
                             <?php endif; ?>
                             <?php if (in_array('eliminar', $_SESSION['permissions']) || in_array('total', $_SESSION['permissions'])): ?>
-                                <a href="delete.php?id=<?php echo $item['id']; ?>" class="btn btn-danger btn-sm">Eliminar</a>
+                                <a href="delete.php?id=<?php echo $categoria['id']; ?>" class="btn btn-danger btn-sm">Eliminar</a>
                             <?php endif; ?>
                         </td>
                     </tr>

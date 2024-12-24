@@ -3,7 +3,6 @@ session_start();
 $projectRoot = dirname(__FILE__, 3);
 require_once dirname(__DIR__, 2) . '/config/config.php';
 require_once $projectRoot . '/includes/functions.php';
-require_once ROOT_PATH . '/includes/auth.php';
 require_once ROOT_PATH . '/lib/fpdf.php';
 
 $id = $_GET['id'] ?? null;

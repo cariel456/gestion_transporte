@@ -12,13 +12,23 @@ if (!$id) {
     exit();
 }
 
-if (deleteServicios($id)) {
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (deleteServicios($id)) {
+        header("Location: read.php");
+        exit();
+    } else {
+        $error = "Error al eliminar la provincia";
+    }
+}
+
+$servicios=getServiciosById($id);
+
+if (!$servicios) {
     header("Location: read.php");
     exit();
-} else {
-    echo "Error al eliminar el servicio";
 }
-$persona=getAllServicios();
+
+include ROOT_PATH . '/includes/header.php';
 ?>
 
 
@@ -33,11 +43,15 @@ $persona=getAllServicios();
 
 <body>
 <div class="container mt-5">
+
         <h1>Eliminar Servicio</h1>
+
         <?php if (isset($error)) : ?>
             <div class="alert alert-danger"><?php echo $error; ?></div>
         <?php endif; ?>
-        <p>¿Está seguro de que desea eliminar el servicio: "<?php echo $localidad['nombre']; ?>"?</p>
+
+        <p>¿Está seguro de que desea eliminar el servicio: "<?php echo $servicios['nombre']; ?>"?</p>
+
         <form method="POST">
             <button type="submit" class="btn btn-danger">Eliminar</button>
             <a href="read.php" class="btn btn-secondary">Cancelar</a>

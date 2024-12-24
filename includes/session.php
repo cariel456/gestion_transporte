@@ -25,19 +25,21 @@ function logout() {
     session_destroy();
 }
 
-function checkPermission($item, $accion, $subitem = null) {
-    if (!isset($_SESSION['user_permissions'])) {
-        return false;
-    }
-    $permissions = $_SESSION['user_permissions'];
+
+
+//function checkPermission($item, $accion, $subitem = null) {
+//    if (!isset($_SESSION['user_permissions'])) {
+//        return false;
+//    }
+//    $permissions = $_SESSION['user_permissions'];
     
-    if (!isset($permissions[$item])) {
-        return false;
-    }
+//    if (!isset($permissions[$item])) {
+//        return false;
+//    }
     
-    if ($subitem !== null) {
-        return isset($permissions[$item]['subitems'][$subitem]) && $permissions[$item]['subitems'][$subitem] == 1;
-    }
+//    if ($subitem !== null) {
+//        return isset($permissions[$item]['subitems'][$subitem]) && $permissions[$item]['subitems'][$subitem] == 1;
+//    }
     
-    return isset($permissions[$item][$accion]) && $permissions[$item][$accion] == 1;
-}
+//    return isset($permissions[$item][$accion]) && $permissions[$item][$accion] == 1;
+//}

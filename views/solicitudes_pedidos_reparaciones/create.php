@@ -11,14 +11,6 @@ $_SESSION['last_activity'] = time();
 
 requireLogin();
 
-//$userPermissions = getUserPermissions();
-
-$requiredPermission = 'leer';
-if (!checkPermission('personal', $requiredPermission)) {
-    //header("Location: " . BASE_URL . "/views/dashboard.php?error=permission_denied");
-    //exit();
-}
-
 $personal = getAllPersonal();
 $unidades = getAllUnidades();
 $localidades = getAllLocalidades();

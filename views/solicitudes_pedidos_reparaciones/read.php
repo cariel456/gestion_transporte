@@ -30,11 +30,12 @@ $rol_id = $_SESSION['rol_id'];
     <div class="container mt-5">
         <h1>Solicitudes de pedidos de reparaciones</h1>
 
+        <div class="d-flex mb-3">
         <?php if (in_array('escritura', $_SESSION['permissions']) || in_array('total', $_SESSION['permissions'])): ?>
-                <a href="create.php" class="btn btn-primary">Crear Nuevo</a>
+            <a href="create.php" class="btn btn-primary">Crear Nuevo</a>
         <?php endif; ?>
-
-        <a href="<?php echo BASE_URL; ?>/includes/header.php" class="btn btn-secondary mb-3">Volver</a>
+        <a href="<?php echo BASE_URL; ?>/includes/header.php" class="btn btn-secondary">Volver</a>
+        </div>
         
     <table class="table table-striped">
         <thead>

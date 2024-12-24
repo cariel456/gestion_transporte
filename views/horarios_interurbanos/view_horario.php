@@ -21,10 +21,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $servicio2 = $_POST['servicio2'];
             $servicio3 = $_POST['servicio3'];
             $terminal_salida = $_POST['terminal_salida'];
+            $terminal_media = $_POST['terminal_media'];
             $terminal_llegada = $_POST['terminal_llegada'];
             $descripcion = $_POST['descripcion'];
             
-            if (updateHorarioInterurbano($id, $servicio1, $servicio2, $servicio3, $terminal_salida, $terminal_llegada, $descripcion)) {
+            if (updateHorarioInterurbano($id, $servicio1, $servicio2, $servicio3, $terminal_salida, $terminal_media, $terminal_llegada, $descripcion)) {
                 $_SESSION['message'] = "Horario actualizado exitosamente.";
             } else {
                 $_SESSION['error'] = "Error al actualizar el horario.";
@@ -50,7 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } elseif ($_POST['action'] === 'delete_detail') {
             $detalle_id = $_POST['detalle_id'];
             
-            if (deleteHorarioInterurbanoDetalles($detalle_id)) {
+            if (deleteHorarioInterurbanoDetalle($detalle_id)) {
                 $_SESSION['message'] = "Detalle eliminado exitosamente.";
             } else {
                 $_SESSION['error'] = "Error al eliminar el detalle.";
@@ -141,6 +142,14 @@ include ROOT_PATH . '/includes/header.php';
                     <select class="form-select" id="terminal_salida" name="terminal_salida" required>
                         <?php foreach ($terminales as $terminal): ?>
                             <option value="<?php echo $terminal['id']; ?>" <?php echo ($terminal['id'] == $horario['terminal_salida']) ? 'selected' : ''; ?>><?php echo $terminal['nombre_terminal']; ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="terminal_media" class="form-label">Terminal Media</label>
+                    <select class="form-select" id="terminal_media" name="terminal_media" required>
+                        <?php foreach ($terminales as $terminal): ?>
+                            <option value="<?php echo $terminal['id']; ?>" <?php echo ($terminal['id'] == $horario['terminal_media']) ? 'selected' : ''; ?>><?php echo $terminal['nombre_terminal']; ?></option>
                         <?php endforeach; ?>
                     </select>
                 </div>

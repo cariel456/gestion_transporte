@@ -46,7 +46,7 @@ include ROOT_PATH . '/includes/header.php';
         <?php if (isset($error)) : ?>
             <div class="alert alert-danger"><?php echo $error; ?></div>
         <?php endif; ?>
-        <p>¿Está seguro de que desea eliminar el país "<?php echo $pais['nombre_pais']; ?>"?</p>
+        <p>¿Está seguro de que desea eliminar el z "<?php echo $pais['nombre_pais']; ?>"?</p>
         <form method="POST">
             <button type="submit" class="btn btn-danger">Eliminar</button>
             <a href="read.php" class="btn btn-secondary">Cancelar</a>

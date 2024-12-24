@@ -6,36 +6,50 @@ require_once ROOT_PATH . '/includes/session.php';
 require_once ROOT_PATH . '/sec/auth_check.php';       
 require_once $projectRoot . '/includes/functions.php'; 
 
-// Obtener los servicios y terminales para los dropdowns
 $servicios = getAllServicios();
 $terminales = getAllTerminales();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Procesar el formulario
-    $servicio1 = $_POST['servicio1'];
-    $servicio2 = $_POST['servicio2'];
-    $servicio3 = $_POST['servicio3'];
-    $terminal_salida = $_POST['terminal_salida'];
-    $terminal_llegada = $_POST['terminal_llegada'];
+    $servicio1 = intval($_POST['servicio1']);
+    $servicio2 = !empty($_POST['servicio2']) ? intval($_POST['servicio2']) : null;
+    $servicio3 = !empty($_POST['servicio3']) ? intval($_POST['servicio3']) : null;
+    $terminal_salida = intval($_POST['terminal_salida']);
+    $terminal_media = intval($_POST['terminal_media']);
+    $terminal_llegada = intval($_POST['terminal_llegada']);
     $descripcion = $_POST['descripcion'];
+
+    // Depuración
+    error_log("Valores recibidos:");
+    error_log("terminal_media: " . $terminal_media);
+    error_log("Todos los valores POST: " . print_r($_POST, true));
     
-    // Insertar en la tabla maestro
-    $id_horario = insertHorarioInterurbano($servicio1, $servicio2, $servicio3, $terminal_salida, $terminal_llegada, $descripcion);
+    $id_horario = insertHorarioInterurbano($servicio1, $servicio2, $servicio3, $terminal_salida, $terminal_media, $terminal_llegada, $descripcion);
     
-    if ($id_horario) {
+    if ($id_horario === false) {
+        $error = "Error al crear el horario interurbano. Por favor, revisa los logs para más detalles.";
+        error_log("Error en insertHorarioInterurbano. Valores pasados: " . 
+                  "s1=$servicio1, s2=$servicio2, s3=$servicio3, " . 
+                  "ts=$terminal_salida, tm=$terminal_media, tl=$terminal_llegada, d=$descripcion");
+    } else {
         // Insertar detalles
         $horas1 = $_POST['hora1'];
         $horas2 = $_POST['hora2'];
         
+        $all_details_inserted = true;
         for ($i = 0; $i < count($horas1); $i++) {
-            insertHorarioInterurbanoDetalle($id_horario, $horas1[$i], $horas2[$i]);
+            if (!insertHorarioInterurbanoDetalle($id_horario, $horas1[$i], $horas2[$i])) {
+                $all_details_inserted = false;
+                error_log("Error al insertar detalle: horario_id=$id_horario, hora1={$horas1[$i]}, hora2={$horas2[$i]}");
+            }
         }
         
-        $_SESSION['message'] = "Horario interurbano creado exitosamente.";
-        header("Location: read.php");
-        exit();
-    } else {
-        $error = "Error al crear el horario interurbano.";
+        if ($all_details_inserted) {
+            $_SESSION['message'] = "Horario interurbano creado exitosamente.";
+            header("Location: read.php");
+            exit();
+        } else {
+            $error = "Se creó el horario pero hubo problemas al insertar algunos detalles.";
+        }
     }
 }
 include ROOT_PATH . '/includes/header.php';
@@ -86,6 +100,15 @@ include ROOT_PATH . '/includes/header.php';
             <div class="mb-3">
                 <label for="terminal_salida" class="form-label">Terminal de Salida</label>
                 <select class="form-select" id="terminal_salida" name="terminal_salida" required>
+                    <option value="">Seleccione una terminal</option>
+                    <?php foreach ($terminales as $terminal): ?>
+                        <option value="<?php echo $terminal['id']; ?>"><?php echo $terminal['nombre_terminal']; ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="terminal_media" class="form-label">Terminal Media</label>
+                <select class="form-select" id="terminal_media" name="terminal_media" required>
                     <option value="">Seleccione una terminal</option>
                     <?php foreach ($terminales as $terminal): ?>
                         <option value="<?php echo $terminal['id']; ?>"><?php echo $terminal['nombre_terminal']; ?></option>

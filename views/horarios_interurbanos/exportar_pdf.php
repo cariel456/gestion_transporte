@@ -1,7 +1,6 @@
 <?php
 session_start();
 require_once '../../config/config.php';
-require_once ROOT_PATH . '/includes/auth.php';
 require_once ROOT_PATH . '/includes/functions.php';
 require_once ROOT_PATH . '/lib/fpdf.php';
 

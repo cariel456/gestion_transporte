@@ -49,50 +49,7 @@ include ROOT_PATH . '/includes/header.php';
 <body>
     <div class="container mt-5">
         <h1 class="mb-4">Lista de Distribuciones de Turnos</h1>
-        
-        <form class="search-form" method="POST">
-            <div class="row g-3">
-                <div class="col-md-3">
-                    <input type="text" class="form-control" name="nombre" placeholder="Nombre" value="<?php echo $_POST['nombre'] ?? ''; ?>">
-                </div>
-                <div class="col-md-3">
-                    <input type="text" class="form-control" name="descripcion" placeholder="Descripción" value="<?php echo $_POST['descripcion'] ?? ''; ?>">
-                </div>
-                <div class="col-md-3">
-                    <select class="form-select" name="tipo_servicio">
-                        <option value="">Tipo de Servicio</option>
-                        <?php
-                        $tipos_servicio = getTurnosServicios();
-                        foreach ($tipos_servicio as $tipo) {
-                            $selected = ($_POST['tipo_servicio'] ?? '') == $tipo['id'] ? 'selected' : '';
-                            echo "<option value='{$tipo['id']}' {$selected}>{$tipo['nombre']}</option>";
-                        }
-                        ?>
-                    </select>
-                </div>
-                <div class="col-md-3">
-                    <select class="form-select" name="personal">
-                        <option value="">Personal</option>
-                        <?php
-                        foreach ($personal_list as $persona) {
-                            $selected = ($_POST['personal'] ?? '') == $persona['id'] ? 'selected' : '';
-                            echo "<option value='{$persona['id']}' {$selected}>{$persona['nombre_personal']}</option>";
-                        }
-                        ?>
-                    </select>
-                </div>
-                <div class="col-md-3">
-                    <input type="text" class="form-control datepicker" name="fecha_inicio" placeholder="Fecha Inicio" value="<?php echo $_POST['fecha_inicio'] ?? ''; ?>">
-                </div>
-                <div class="col-md-3">
-                    <input type="text" class="form-control datepicker" name="fecha_fin" placeholder="Fecha Fin" value="<?php echo $_POST['fecha_fin'] ?? ''; ?>">
-                </div>
-                <div class="col-md-3">
-                    <button type="submit" class="btn btn-primary w-100">Buscar</button>
-                </div>
-            </div>
-        </form>
-        
+         
         <table class="table table-striped table-hover">
             <thead class="table-dark">
                 <tr>
@@ -111,33 +68,34 @@ include ROOT_PATH . '/includes/header.php';
                         <td><?php echo $distribucion['descripcion']; ?></td>
                         <td><?php echo getTurnosTipoServicioById($distribucion['tipo_servicio'])['nombre']; ?></td>
                         <td>
-                            <div class="btn-group" role="group">
-                                <a href="view.php?id=<?php echo $distribucion['id']; ?>" class="btn btn-primary btn-sm">Ver</a>
-                                <?php if (in_array('escritura', $_SESSION['permissions']) || in_array('total', $_SESSION['permissions'])): ?>
-                                    <a href="update.php?id=<?php echo $item['id']; ?>" class="btn btn-warning btn-sm">Actualizar</a>
-                                    <a href="delete.php?id=<?php echo $item['id']; ?>" class="btn btn-danger btn-sm">Eliminar</a>
-                                 <?php endif; ?>
-                                <a href="exportar_pdf.php?id=<?php echo $distribucion['id']; ?>" class="btn btn-info btn-sm" target="_blank">Exportar a PDF</a>
-                                <a href="consultas.php?id=<?php echo $distribucion['id']; ?>" class="btn btn-secondary btn-sm">Consultas</a>
-                            </div>
+                        <div class="btn-group" role="group">
+        <a href="view.php?id=<?php echo $distribucion['id']; ?>" class="btn btn-primary btn-sm">Ver</a>
+        <?php if (in_array('modificar', $_SESSION['permissions']) || in_array('total', $_SESSION['permissions'])): ?>
+            <a href="update.php?id=<?php echo $distribucion['id']; ?>" class="btn btn-warning btn-sm">Actualizar</a>
+        <?php endif; ?>
+        <?php if (in_array('eliminar', $_SESSION['permissions']) || in_array('total', $_SESSION['permissions'])): ?>
+            <a href="delete.php?id=<?php echo $distribucion['id']; ?>" class="btn btn-danger btn-sm">Eliminar</a>
+        <?php endif; ?>
+        
+        <!-- Botón de exportar a PDF -->
+        <a href="exportar_pdf.php?id=<?php echo $distribucion['id']; ?>" class="btn btn-info btn-sm">Exportar a PDF</a>
+    </div>
                         </td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>
         </table>
+
+         <!-- Botón para exportar a PDF -->
+         <a href="exportar_pdf.php?id=<?php echo $distribucion['id']; ?>" class="btn btn-primary btn-sm">Exportar a PDF</a>
         
         <?php if (in_array('escritura', $_SESSION['permissions']) || in_array('total', $_SESSION['permissions'])): ?>
             <a href="create.php" class="btn btn-primary">Crear Nuevo</a>
         <?php endif; ?>
     </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            flatpickr(".datepicker", {
-                dateFormat: "Y-m-d",
-            });
-        });
-    </script>
+
 </body>
+
 </html>

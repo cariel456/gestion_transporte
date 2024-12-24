@@ -14,20 +14,44 @@ if (!$id) {
     exit();
 }
 
-if (deleteCategoriaPersona($id)) {
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (deleteCategoriaPersona($id)) {
+        header("Location: read.php");
+        exit();
+    } else {
+        $error = "Error al eliminar la categoria";
+    }
+}
+
+$categoria = getCategoriaPersonaById($id);
+if (!$categoria) {
     header("Location: read.php");
     exit();
-} else {
-    echo "Error al eliminar la categoría de persona";
 }
-$persona=getAllCategoriasPersona();
+
+include ROOT_PATH . '/includes/header.php';
 ?>
 
-<div class="container mt-5">
-    <h2>Eliminar Personal</h2>
-    <p>¿Está seguro de que desea eliminar la categoria: <?php echo $persona['nombre_categoria']; ?>?</p>
-    <form method="POST">
-        <button type="submit" class="btn btn-danger">Eliminar</button>
-        <a href="read.php" class="btn btn-secondary">Cancelar</a>
-    </form>
-</div>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eliminar Categoria</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1>Eliminar Categoria</h1>
+        <?php if (isset($error)) : ?>
+            <div class="alert alert-danger"><?php echo $error; ?></div>
+        <?php endif; ?>
+        <p>¿Está seguro de que desea eliminar la categoria "<?php echo $categoria['nombre_categoria']; ?>"?</p>
+        <form method="POST">
+            <button type="submit" class="btn btn-danger">Eliminar</button>
+            <a href="read.php" class="btn btn-secondary">Cancelar</a>
+        </form>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

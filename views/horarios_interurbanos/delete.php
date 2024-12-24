@@ -1,28 +1,57 @@
 <?php
-require_once '../../config/config.php';
-require_once ROOT_PATH . '/includes/auth.php';
-require_once ROOT_PATH . '/includes/functions.php';
+$projectRoot = dirname(__FILE__, 3); 
+require_once dirname(__DIR__, 2) . '/config/config.php'; 
+require_once ROOT_PATH . '/sec/init.php';
+require_once ROOT_PATH . '/includes/session.php';   
+require_once ROOT_PATH . '/sec/auth_check.php';       
+require_once $projectRoot . '/includes/functions.php'; 
 
 requireLogin();
 
-$userPermissions = getUserPermissions();
-
-$requiredPermission = 'borrar';
-if (!checkPermission('personal', $requiredPermission)) {
-    header("Location: " . BASE_URL . "/views/dashboard.php?error=permission_denied");
-    exit();
-}
-
-if (!isset($_GET['id'])) {
+$id = $_GET['id'] ?? null;
+if (!$id) {
     header("Location: read.php");
     exit();
 }
 
-$id = $_GET['id'];
-
-if (deleteHorarioInterurbano($id)) {
-    header("Location: read.php?success=1");
-} else {
-    header("Location: read.php?error=1");
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (deleteHorarioInterurbano($id)) {
+        header("Location: read.php");
+        exit();
+    } else {
+        $error = "Error al eliminar el horario interurbano";
+    }
 }
-exit();
+
+$pais = getHorarioInterurbanoById($id);
+if (!$pais) {
+    header("Location: read.php");
+    exit();
+}
+
+include ROOT_PATH . '/includes/header.php';
+?>
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eliminar Horario Interurbano</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1>Eliminar Horario Interurbano</h1>
+        <?php if (isset($error)) : ?>
+            <div class="alert alert-danger"><?php echo $error; ?></div>
+        <?php endif; ?>
+        <p>¿Está seguro de que desea eliminar el horario interurbano?</p>
+        <form method="POST">
+            <button type="submit" class="btn btn-danger">Eliminar</button>
+            <a href="read.php" class="btn btn-secondary">Cancelar</a>
+        </form>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

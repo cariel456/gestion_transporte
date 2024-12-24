@@ -24,10 +24,14 @@ include ROOT_PATH . '/includes/header.php';
 <body>
     <div class="container mt-5">
         <h1>Niveles de Urgencia</h1>
+
+        <div class="d-flex mb-3">
         <?php if (in_array('escritura', $_SESSION['permissions']) || in_array('total', $_SESSION['permissions'])): ?>
             <a href="create.php" class="btn btn-primary">Crear Nuevo</a>
         <?php endif; ?>
-        <a href="../../index.php" class="btn btn-secondary mb-3">Cancelar</a>
+        <a href="../../index.php" class="btn btn-secondary">Cancelar</a>
+        </div>
+
         <table class="table table-striped">
             <thead>
                 <tr>
@@ -45,10 +49,10 @@ include ROOT_PATH . '/includes/header.php';
                         <td><?php echo $nivel['descripcion_urgencias']; ?></td>
                         <td>
                             <?php if (in_array('modificar', $_SESSION['permissions']) || in_array('total', $_SESSION['permissions'])): ?>
-                                <a href="update.php?id=<?php echo $item['id']; ?>" class="btn btn-warning btn-sm">Actualizar</a>
+                                <a href="update.php?id=<?php echo $nivel['id']; ?>" class="btn btn-warning btn-sm">Actualizar</a>
                             <?php endif; ?>
                             <?php if (in_array('eliminar', $_SESSION['permissions']) || in_array('total', $_SESSION['permissions'])): ?>
-                                <a href="delete.php?id=<?php echo $item['id']; ?>" class="btn btn-danger btn-sm">Eliminar</a>
+                                <a href="delete.php?id=<?php echo $nivel['id']; ?>" class="btn btn-danger btn-sm">Eliminar</a>
                             <?php endif; ?>
                         </td>
                     </tr>

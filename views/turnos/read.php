@@ -20,13 +20,16 @@ requireLogin();
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-    <div class="container mt-5">
 
+    <div class="container mt-5">
     <h1>Ingresar nuevo turno</h1>
+
+    <div class="d-flex mb-3">
         <?php if (in_array('escritura', $_SESSION['permissions']) || in_array('total', $_SESSION['permissions'])): ?>
                 <a href="create.php" class="btn btn-primary">Crear Nuevo</a>
         <?php endif; ?>
-        <a href="../../index.php" class="btn btn-secondary mb-3">Volver</a>
+        <a href="../../index.php" class="btn btn-secondary">Volver</a>
+    </div>
 
         <table class="table table-striped">
             <thead>
@@ -45,8 +48,8 @@ requireLogin();
                         <td><?php echo $categoria['descripcion']; ?></td>
                         <td>
                         <?php if (in_array('escritura', $_SESSION['permissions']) || in_array('total', $_SESSION['permissions'])): ?>
-                                <a href="update.php?id=<?php echo $item['id']; ?>" class="btn btn-warning btn-sm">Actualizar</a>
-                                <a href="delete.php?id=<?php echo $item['id']; ?>" class="btn btn-danger btn-sm">Eliminar</a>
+                                <a href="update.php?id=<?php echo $categoria['id']; ?>" class="btn btn-warning btn-sm">Actualizar</a>
+                                <a href="delete.php?id=<?php echo $categoria['id']; ?>" class="btn btn-danger btn-sm">Eliminar</a>
                         <?php endif; ?>
                         </td>
                     </tr>

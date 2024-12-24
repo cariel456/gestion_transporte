@@ -12,9 +12,9 @@ $terminales = getAllTerminales();
 
 // Verificar si se ha proporcionado un ID válido
 if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
-    $_SESSION['error'] = "ID de horario interurbano no válido.";
-    header("Location: read.php");
-    exit();
+    //$_SESSION['error'] = "ID de horario interurbano no válido.";
+    //header("Location: read.php");
+    //exit();
 }
 
 $id_horario = $_GET['id'];
@@ -44,21 +44,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     if ($actualizado) {
         // Eliminar detalles antiguos
-        deleteHorarioInterurbanoDetalles($id_horario);
+       // deleteHorarioInterurbanoDetalles($id_horario);
         
         // Insertar nuevos detalles
         $horas1 = $_POST['hora1'];
         $horas2 = $_POST['hora2'];
         
         for ($i = 0; $i < count($horas1); $i++) {
-            insertHorarioInterurbanoDetalle($id_horario, $horas1[$i], $horas2[$i]);
+           // insertHorarioInterurbanoDetalle($id_horario, $horas1[$i], $horas2[$i]);
         }
         
-        $_SESSION['message'] = "Horario interurbano actualizado exitosamente.";
-        header("Location: read.php");
+       // $_SESSION['message'] = "Horario interurbano actualizado exitosamente.";
+       // header("Location: read.php");
         exit();
     } else {
-        $error = "Error al actualizar el horario interurbano.";
+        //$error = "Error al actualizar el horario interurbano.";
     }
 }
 

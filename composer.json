@@ -1,0 +1,17 @@
+{
+    "name": "it-pc-01/grupo_horianski-p",
+    "autoload": {
+        "psr-4": {
+            "ItPc01\\GrupoHorianskiP\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "cariel",
+            "email": "monitoreogrupohorianski@outlook.com"
+        }
+    ],
+    "require": {
+        "phpoffice/phpspreadsheet": "^3.6"
+    }
+}

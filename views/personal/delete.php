@@ -13,8 +13,6 @@ if (!$id) {
     exit();
 }
 
-$persona = getPersonalById($id);
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (deletePersonal($id)) {
         header("Location: read.php");
@@ -23,8 +21,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = "Error al eliminar el personal";
     }
 }
-include ROOT_PATH . '/includes/header.php'; 
 
+$persona = getPersonalById($id);
+if (!$persona) {
+    header("Location: read.php");
+    exit();
+}
+
+include ROOT_PATH . '/includes/header.php'; 
 ?>
 
 <div class="container mt-5">

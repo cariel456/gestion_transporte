@@ -25,8 +25,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'nombre' => $_POST['nombre'],
         'descripcion' => $_POST['descripcion']
     ];
-    
-    if (updateTurnos($nombre, $descripcion, $id)) {
+
+    if (updateTurnos($data)) {
         header("Location: read.php");
         exit();
     } else {
