@@ -1,0 +1,113 @@
+:root {
+    --primary-color: #0d6efd;
+    --secondary-color: #6c757d;
+    --background-color: #f8f9fa;
+}
+
+body {
+    background-color: var(--background-color);
+    color: #333;
+    line-height: 1.6;
+}
+
+.contenedor-principal {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.card-formulario {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+    padding: 2rem;
+    margin-bottom: 2rem;
+}
+
+.contenedor-resultados {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+    padding: 2rem;
+    margin-top: 3rem;
+}
+
+.titulo-principal {
+    color: var(--primary-color);
+    font-weight: 600;
+    margin-bottom: 2rem;
+}
+
+.contenedor-grafica {
+    margin-top: 2rem;
+    padding: 1rem;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 1px 8px rgba(0,0,0,0.03);
+}
+
+.tabla-resultados {
+    margin-top: 1.5rem;
+}
+
+.custom-file-upload {
+    border: 2px dashed #dee2e6;
+    border-radius: 8px;
+    padding: 2rem;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.custom-file-upload:hover {
+    border-color: var(--primary-color);
+    background-color: rgba(13, 110, 253, 0.03);
+}
+
+@media (max-width: 768px) {
+    .contenedor-principal {
+        padding: 1rem;
+    }
+    
+    .card-formulario,
+    .contenedor-resultados {
+        padding: 1.5rem;
+    }
+}
+/* Estilos para Select2 */
+.select2-container--bootstrap-5 .select2-selection {
+border: 1px solid #dee2e6;
+padding: 0.375rem 0.75rem;
+height: calc(3.5rem + 2px);
+line-height: 1.5;
+font-size: 1rem;
+}
+
+.select2-container--bootstrap-5 .select2-selection--single .select2-selection__rendered {
+padding-left: 0;
+line-height: 1.5;
+color: #212529;
+}
+
+.select2-container--bootstrap-5 .select2-selection--single .select2-selection__arrow {
+height: 100%;
+position: absolute;
+top: 0;
+right: 0.75rem;
+width: 2rem;
+}
+
+.select2-container--bootstrap-5 .select2-dropdown {
+border-color: #dee2e6;
+border-radius: 0.375rem;
+}
+
+.select2-container--bootstrap-5 .select2-search__field {
+padding: 0.375rem 0.75rem;
+border: 1px solid #dee2e6;
+border-radius: 0.375rem;
+}
+
+.select2-container--bootstrap-5 .select2-results__option--highlighted[aria-selected] {
+background-color: var(--primary-color);
+color: white;
+}

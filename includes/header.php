@@ -78,6 +78,11 @@ $userId = $_SESSION['user_id'] ?? null; // Asegúrate de que esta línea esté c
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="<?php echo BASE_URL; ?>/upload_and_filter.php">REPORT</a>
+                </li>
+
                 <?php if (checkPermission($conn, $userId, 'taller')): ?>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
