@@ -266,13 +266,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 </div>
                             </form>
                             
-                            <!-- Enlaces adicionales -->
+                            <!-- Enlaces adicionales 
                             <div class="text-center mt-4">
                                 <small class="text-muted">
                                     ¿Problemas para acceder? 
                                     <a href="#" class="text-decoration-none" style="color: var(--accent-amber);">Contactar soporte</a>
                                 </small>
-                            </div>
+                            </div>-->
                         </div>
                     </div>
                 </div>
