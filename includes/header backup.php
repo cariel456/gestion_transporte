@@ -295,6 +295,112 @@ $userId = $_SESSION['user_id'] ?? null; // Asegúrate de que esta línea esté c
                         </ul>
                     </li>
                 <?php endif; ?>
+
+                <!-- UNIDADES -->
+                <?php if (checkPermission($conn, $userId, 'unidades')): ?>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle nav-link-custom" 
+                           href="#" 
+                           id="navbarDropdownUnidades" 
+                           role="button" 
+                           data-bs-toggle="dropdown" 
+                           aria-expanded="false">
+                            UNIDADES
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-custom" aria-labelledby="navbarDropdownUnidades">
+                            <?php if (checkPermission($conn, $userId, 'unidades_read')): ?>
+                                <li><a class="dropdown-item dropdown-item-custom" href="<?php echo BASE_URL; ?>/views/unidades/read.php">Ver Unidades</a></li>
+                            <?php endif; ?>
+                        </ul>
+                    </li>
+                <?php endif; ?>
+
+                <!-- HORARIOS -->
+                <?php if (checkPermission($conn, $userId, 'horarios')): ?>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle nav-link-custom" 
+                           href="#" 
+                           id="navbarDropdownHorarios" 
+                           role="button" 
+                           data-bs-toggle="dropdown" 
+                           aria-expanded="false">
+                            HORARIOS
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-custom" aria-labelledby="navbarDropdownHorarios">
+                            <?php if (checkPermission($conn, $userId, 'distribucion_turnos')): ?>
+                                <li><a class="dropdown-item dropdown-item-custom" href="<?php echo BASE_URL; ?>/views/turnos_distribucion/read.php">Distribución de Turnos</a></li>
+                            <?php endif; ?>
+                            <?php if (checkPermission($conn, $userId, 'horarios_interurbanos')): ?>
+                                <li><a class="dropdown-item dropdown-item-custom" href="<?php echo BASE_URL; ?>/views/horarios_interurbanos/read.php">Gestión Horarios Interurbanos</a></li>
+                            <?php endif; ?>
+                            <?php if (checkPermission($conn, $userId, 'horarios_urbanos')): ?>
+                                <li><a class="dropdown-item dropdown-item-custom" href="<?php echo BASE_URL; ?>/views/horarios_urbanos/index.php">Horarios Urbanos</a></li>
+                            <?php endif; ?>
+                        </ul>
+                    </li>
+                <?php endif; ?>
+
+                <!-- PERSONAL -->
+                <?php if (checkPermission($conn, $userId, 'personal')): ?>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle nav-link-custom" 
+                           href="#" 
+                           id="navbarDropdownPersonal" 
+                           role="button" 
+                           data-bs-toggle="dropdown" 
+                           aria-expanded="false">
+                            PERSONAL
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-custom" aria-labelledby="navbarDropdownPersonal">
+                            <?php if (checkPermission($conn, $userId, 'personal_read')): ?>
+                                <li><a class="dropdown-item dropdown-item-custom" href="<?php echo BASE_URL; ?>/views/personal/read.php">Personal</a></li>
+                            <?php endif; ?>
+                            <?php if (checkPermission($conn, $userId, 'categoria_personal')): ?>
+                                <li><a class="dropdown-item dropdown-item-custom" href="<?php echo BASE_URL; ?>/views/categoria_persona/read.php">Categoria Personal</a></li>
+                            <?php endif; ?>
+                        </ul>
+                    </li>
+                <?php endif; ?>
+
+                <!-- PARÁMETROS -->
+                <?php if (checkPermission($conn, $userId, 'parametros')): ?>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle nav-link-custom" 
+                           href="#" 
+                           id="navbarDropdownParametros" 
+                           role="button" 
+                           data-bs-toggle="dropdown" 
+                           aria-expanded="false">
+                            PARÁMETROS
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-custom" aria-labelledby="navbarDropdownParametros">
+                            <?php if (checkPermission($conn, $userId, 'parametros_paises')): ?>
+                                <li><a class="dropdown-item dropdown-item-custom" href="<?php echo BASE_URL; ?>/views/paises/read.php">Países</a></li>
+                            <?php endif; ?>
+                            <?php if (checkPermission($conn, $userId, 'parametros_provincias')): ?>
+                                <li><a class="dropdown-item dropdown-item-custom" href="<?php echo BASE_URL; ?>/views/provincias/read.php">Provincias</a></li>
+                            <?php endif; ?>
+                            <?php if (checkPermission($conn, $userId, 'parametros_localidades')): ?>
+                                <li><a class="dropdown-item dropdown-item-custom" href="<?php echo BASE_URL; ?>/views/localidades/read.php">Localidades</a></li>
+                            <?php endif; ?>
+                            <?php if (checkPermission($conn, $userId, 'parametros_niveles_urgencias')): ?>
+                                <li><a class="dropdown-item dropdown-item-custom" href="<?php echo BASE_URL; ?>/views/niveles_urgencias/read.php">Niveles de Urgencia</a></li>
+                            <?php endif; ?>
+                            <?php if (checkPermission($conn, $userId, 'parametros_especialidades_taller')): ?>
+                                <li><a class="dropdown-item dropdown-item-custom" href="<?php echo BASE_URL; ?>/views/especialidades_taller/read.php">Especialidades de Taller</a></li>
+                            <?php endif; ?>
+                            <?php if (checkPermission($conn, $userId, 'parametros_servicios')): ?>
+                                <li><a class="dropdown-item dropdown-item-custom" href="<?php echo BASE_URL; ?>/views/servicios/read.php">Servicios</a></li>
+                            <?php endif; ?>
+                            <?php if (checkPermission($conn, $userId, 'parametros_terminales')): ?>
+                                <li><a class="dropdown-item dropdown-item-custom" href="<?php echo BASE_URL; ?>/views/terminales/read.php">Terminales</a></li>
+                            <?php endif; ?>
+                            <?php if (checkPermission($conn, $userId, 'parametros_turnos')): ?>
+                                <li><a class="dropdown-item dropdown-item-custom" href="<?php echo BASE_URL; ?>/views/turnos/read.php">Turnos</a></li>
+                            <?php endif; ?>
+                        </ul>
+                    </li>
+                <?php endif; ?>
             </ul>
             
             <!-- Cerrar sesión -->

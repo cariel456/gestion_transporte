@@ -1,9 +1,4 @@
 <?php
-/**
- * Vista de listado de solicitudes de pedidos de reparación
- * @version 2.0 - Optimizado para Bootstrap 5
- */
-
 $projectRoot = dirname(__FILE__, 3); 
 require_once dirname(__DIR__, 2) . '/config/config.php'; 
 require_once ROOT_PATH . '/sec/init.php';
@@ -20,12 +15,12 @@ $niveles_urgencias = getAllNivelesUrgencias();
 $grupos_funciones = getAllGruposFunciones();
 $especialidades = getAllEspecialidadesTalleres();
 
-include ROOT_PATH . '/includes/header.php';
-
 $rol_id = $_SESSION['rol_id'];
 $tienePermisoEscritura = in_array('escritura', $_SESSION['permissions']) || in_array('total', $_SESSION['permissions']);
 $tienePermisoModificar = in_array('modificar', $_SESSION['permissions']) || in_array('total', $_SESSION['permissions']);
 $tienePermisoEliminar = in_array('eliminar', $_SESSION['permissions']) || in_array('total', $_SESSION['permissions']);
+
+include ROOT_PATH . '/includes/header.php';
 ?>
 
 <!DOCTYPE html>
@@ -359,6 +354,7 @@ $tienePermisoEliminar = in_array('eliminar', $_SESSION['permissions']) || in_arr
         }
     </style>
 </head>
+
 <body style="background-color: #f8f9fa; color: #212529;">
     <div class="main-container">
         <!-- Header -->
