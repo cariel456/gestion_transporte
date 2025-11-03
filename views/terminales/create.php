@@ -5,20 +5,23 @@ require_once ROOT_PATH . '/sec/init.php';
 require_once ROOT_PATH . '/includes/session.php';   
 require_once ROOT_PATH . '/sec/auth_check.php';       
 require_once $projectRoot . '/includes/functions.php'; 
+
 requireLogin();
 
+// Obtener datos relacionados
 $localidades = getAllLocalidades();
 
+// Procesar formulario
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $data = [
         'nombre_terminal' => $_POST['nombre_terminal'],
         'descripcion_terminal' => $_POST['descripcion_terminal'],
         'localidad' => $_POST['localidad'],
-        'telefono' => $_POST['telefono'],
-        'telefono2' => $_POST['telefono2'],
-        'correo' => $_POST['correo'],
-        'correo2' => $_POST['correo2'],
-        'web' => $_POST['web']
+        'telefono' => $_POST['telefono'] ?? '',
+        'telefono2' => $_POST['telefono2'] ?? '',
+        'correo' => $_POST['correo'] ?? '',
+        'correo2' => $_POST['correo2'] ?? '',
+        'web' => $_POST['web'] ?? ''
     ];
     
     if (createTerminal($data)) {
@@ -29,64 +32,74 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
+// Incluir header
 include ROOT_PATH . '/includes/header.php';
-?>
 
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crear Terminal</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body>
-    <div class="container mt-5">
-        <h1>Crear Terminal</h1>
-        <?php if (isset($error)) : ?>
-            <div class="alert alert-danger"><?php echo $error; ?></div>
-        <?php endif; ?>
-        <form method="POST">
-            <div class="mb-3">
-                <label for="nombre_terminal" class="form-label">Nombre de la Terminal</label>
-                <input type="text" class="form-control" id="nombre_terminal" name="nombre_terminal" required>
-            </div>
-            <div class="mb-3">
-                <label for="descripcion_terminal" class="form-label">Descripción</label>
-                <textarea class="form-control" id="descripcion_terminal" name="descripcion_terminal" rows="3"></textarea>
-            </div>
-            <div class="mb-3">
-                <label for="localidad" class="form-label">Localidad</label>
-                <select class="form-control" id="localidad" name="localidad" required>
-                    <?php foreach ($localidades as $localidad): ?>
-                        <option value="<?php echo $localidad['id']; ?>"><?php echo $localidad['nombre_localidad']; ?></option>
-                    <?php endforeach; ?>
-                </select>
-            </div>
-            <div class="mb-3">
-                <label for="telefono" class="form-label">Teléfono</label>
-                <input type="text" class="form-control" id="telefono" name="telefono">
-            </div>
-            <div class="mb-3">
-                <label for="telefono2" class="form-label">Teléfono 2</label>
-                <input type="text" class="form-control" id="telefono2" name="telefono2">
-            </div>
-            <div class="mb-3">
-                <label for="correo" class="form-label">Correo</label>
-                <input type="email" class="form-control" id="correo" name="correo">
-            </div>
-            <div class="mb-3">
-                <label for="correo2" class="form-label">Correo 2</label>
-                <input type="email" class="form-control" id="correo2" name="correo2">
-            </div>
-            <div class="mb-3">
-                <label for="web" class="form-label">Sitio Web</label>
-                <input type="url" class="form-control" id="web" name="web">
-            </div>
-            <button type="submit" class="btn btn-primary">Crear</button>
-            <a href="read.php" class="btn btn-secondary">Cancelar</a>
-        </form>
-    </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+// Configuración de la vista
+$pageTitle = '🏢 Crear Terminal';
+$backUrl = 'read.php';
+
+// Preparar opciones para el select de localidades
+$localidadesOptions = [];
+foreach ($localidades as $localidad) {
+    $localidadesOptions[$localidad['id']] = $localidad['nombre_localidad'];
+}
+
+// Definir campos del formulario
+$formFields = [
+    [
+        'type' => 'text',
+        'name' => 'nombre_terminal',
+        'label' => 'Nombre de la Terminal',
+        'required' => true,
+        'placeholder' => 'Ej: Terminal Central'
+    ],
+    [
+        'type' => 'textarea',
+        'name' => 'descripcion_terminal',
+        'label' => 'Descripción',
+        'rows' => 3,
+        'placeholder' => 'Descripción detallada de la terminal'
+    ],
+    [
+        'type' => 'select',
+        'name' => 'localidad',
+        'label' => 'Localidad',
+        'required' => true,
+        'options' => $localidadesOptions
+    ],
+    [
+        'type' => 'tel',
+        'name' => 'telefono',
+        'label' => 'Teléfono Principal',
+        'placeholder' => 'Ej: +54 299 123-4567'
+    ],
+    [
+        'type' => 'tel',
+        'name' => 'telefono2',
+        'label' => 'Teléfono Secundario',
+        'placeholder' => 'Ej: +54 299 765-4321'
+    ],
+    [
+        'type' => 'email',
+        'name' => 'correo',
+        'label' => 'Correo Electrónico Principal',
+        'placeholder' => 'correo@ejemplo.com'
+    ],
+    [
+        'type' => 'email',
+        'name' => 'correo2',
+        'label' => 'Correo Electrónico Secundario',
+        'placeholder' => 'correo2@ejemplo.com'
+    ],
+    [
+        'type' => 'url',
+        'name' => 'web',
+        'label' => 'Sitio Web',
+        'placeholder' => 'https://www.ejemplo.com'
+    ]
+];
+
+// Incluir plantilla base
+include dirname(__DIR__) . '/_base_crud_create.php';
+?>

@@ -10,62 +10,35 @@ requireLogin();
 $terminales = getAllTerminales();
 
 include ROOT_PATH . '/includes/header.php';
-?>
 
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Terminales</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body>
-    <div class="container mt-5">
+// Configuración de la vista
+$pageTitle = '🌎 Terminales';
+$createUrl = 'create.php';
+$backUrl = BASE_URL . '/includes/header.php';
+$emptyIcon = '🌎';
 
-        <h1>Terminales</h1>
-    
-        <div class="d-flex mb-3">
-        <?php if (in_array('escritura', $_SESSION['permissions']) || in_array('total', $_SESSION['permissions'])): ?>
-            <a href="create.php" class="btn btn-primary">Crear Nuevo</a>
-        <?php endif; ?>
-            <a href="../../index.php" class="btn btn-secondary">Cancelar</a>
-        </div>
+$columns = [
+    'id' => 'ID',
+    'nombre_terminal' => 'Nombre',
+    'descripcion_terminal' => 'Descripción'
+];
+
+$data = array_values($terminales);
+
+// Función personalizada para renderizar celdas
+function renderTableCells($item, $columns) {
+    foreach (array_keys($columns) as $key) {
+        $value = $item[$key] ?? 'N/A';
         
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Nombre</th>
-                    <th>Descripción</th>
-                    <th>Localidad</th>
-                    <th>Teléfono</th>
-                    <th>Correo</th>
-                    <th>Web</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($terminales as $terminal): ?>
-                    <tr>
-                        <td><?php echo $terminal['id']; ?></td>
-                        <td><?php echo $terminal['nombre_terminal']; ?></td>
-                        <td><?php echo $terminal['descripcion_terminal']; ?></td>
-                        <td><?php echo $terminal['nombre_localidad']; ?></td>
-                        <td><?php echo $terminal['telefono']; ?></td>
-                        <td><?php echo $terminal['correo']; ?></td>
-                        <td><?php echo $terminal['web']; ?></td>
-                        <td>
-                        <?php if (in_array('escritura', $_SESSION['permissions']) || in_array('total', $_SESSION['permissions'])): ?>
-                                <a href="update.php?id=<?php echo $terminal['id']; ?>" class="btn btn-warning btn-sm">Actualizar</a>
-                                <a href="delete.php?id=<?php echo $terminal['id']; ?>" class="btn btn-danger btn-sm">Eliminar</a>
-                        <?php endif; ?>
-                        </td>
-                    </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
-    </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+        // Formateo especial para ID
+        if ($key === 'id') {
+            echo '<td><strong>#' . str_pad($value, 3, '0', STR_PAD_LEFT) . '</strong></td>';
+        } else {
+            echo '<td>' . htmlspecialchars($value) . '</td>';
+        }
+    }
+}
+
+// Incluir plantilla base
+include dirname(__DIR__) . '/_base_crud_read.php';
+?>

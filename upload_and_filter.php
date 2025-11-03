@@ -1,10 +1,4 @@
 <?php
-/**
- * Script para análisis de auditorías de transacciones
- * Procesa archivos Excel y genera reportes estadísticos con filtros temporales
- * @version 2.0 - Optimizado para Bootstrap 5
- */
-
 // Importar configuración de términos de reportes
 $TERMINOS_REPORTES = include 'terminos_reportes.php';
 $timeFilter = 'all';
@@ -133,7 +127,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['excel_files'])) {
 include 'includes/header.php';
 ?>
 
-<!doctype html>
+<!DOCTYPE HTML>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -312,7 +306,7 @@ include 'includes/header.php';
         
         .table-custom {
             background-color: transparent;
-            color: var(--text-light);
+            color: color: #212529;
         }
         
         .table-custom thead {
@@ -338,7 +332,7 @@ include 'includes/header.php';
         
         .table-custom tbody td {
             padding: 0.875rem 1rem;
-            color: var(--text-light);
+            color: color: color: #212529;
         }
         
         .frequency-badge {
@@ -406,6 +400,7 @@ include 'includes/header.php';
         }
     </style>
 </head>
+
 <body>
 <div class="main-container">
     <h1 class="page-title">Análisis de Auditorías de Transacciones</h1>

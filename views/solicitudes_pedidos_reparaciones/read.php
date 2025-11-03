@@ -30,7 +30,6 @@ include ROOT_PATH . '/includes/header.php';
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Solicitudes de Reparación - EldoWay</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
-    <link href="<?php echo BASE_URL; ?>/vendor/bootstrap-5.3.8-dist/css/bootstrap.min.css" rel="stylesheet">
     
     <style>
         :root {
